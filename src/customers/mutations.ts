@@ -100,3 +100,16 @@ export const bulkRemoveCustomers = gql`
     }
   }
 `;
+
+export const addCustomerNote = gql`
+  mutation UpdateCustomerNotes($id: ID!, $note: String!) {
+    customerUpdate(input: { note: $note }, id: $id) {
+      errors {
+        ...AccountError
+      }
+      user {
+        note
+      }
+    }
+  }
+`;

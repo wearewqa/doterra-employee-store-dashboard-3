@@ -44,6 +44,13 @@ export const customerDetails = gql`
   ) {
     user(id: $id) {
       ...CustomerDetails
+      events {
+        count
+        date
+        id
+        message
+        type
+      }
       metadata {
         ...MetadataItem
       }

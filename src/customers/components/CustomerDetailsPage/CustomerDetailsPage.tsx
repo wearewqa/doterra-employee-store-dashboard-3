@@ -34,6 +34,7 @@ import CustomerDetails from "../CustomerDetails";
 import CustomerInfo from "../CustomerInfo";
 import CustomerOrders from "../CustomerOrders";
 import CustomerStats from "../CustomerStats";
+import CustomerNotes from "../CustomerNotes";
 
 export interface CustomerDetailsPageFormData extends MetadataFormData {
   firstName: string;
@@ -107,7 +108,7 @@ const CustomerDetailsPage: React.FC<CustomerDetailsPageProps> = ({
                 errors={errors}
                 onChange={change}
               />
-              <CardSpacer />
+
               <CustomerInfo data={data} disabled={disabled} errors={errors} onChange={change} />
               <CardSpacer />
               <RequirePermissions requiredPermissions={[PermissionEnum.MANAGE_ORDERS]}>
@@ -119,7 +120,9 @@ const CustomerDetailsPage: React.FC<CustomerDetailsPageProps> = ({
                 />
                 <CardSpacer />
               </RequirePermissions>
+
               <Metadata data={data} onChange={changeMetadata} />
+              <CustomerNotes />
             </DetailPageLayout.Content>
             <DetailPageLayout.RightSidebar>
               <CustomerAddresses
