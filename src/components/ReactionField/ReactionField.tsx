@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-imports */
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -5,10 +6,10 @@ import FormLabel from "@material-ui/core/FormLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import { makeStyles } from "@material-ui/styles";
-import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
 import SentimentSatisfiedIcon from "@material-ui/icons/SentimentSatisfied";
 import SentimentSatisfiedAltIcon from "@material-ui/icons/SentimentSatisfiedAlt";
+import SentimentVeryDissatisfiedIcon from "@material-ui/icons/SentimentVeryDissatisfied";
+import { makeStyles } from "@material-ui/styles";
 import classNames from "classnames";
 import React from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
@@ -54,7 +55,7 @@ function createChoices(intl: IntlShape): ReactionFieldChoice[] {
   return [
     {
       label: intl.formatMessage({
-        id: "satisfied",
+        id: "Y09xUU",
         defaultMessage: "Satisfied",
         description: "Satisfied type",
       }),
@@ -64,7 +65,7 @@ function createChoices(intl: IntlShape): ReactionFieldChoice[] {
     },
     {
       label: intl.formatMessage({
-        id: "neutral",
+        id: "SMtH9x",
         defaultMessage: "Neutral",
         description: "neutral type",
       }),
@@ -74,7 +75,7 @@ function createChoices(intl: IntlShape): ReactionFieldChoice[] {
     },
     {
       label: intl.formatMessage({
-        id: "dissatisfied",
+        id: "pRo663",
         defaultMessage: "Dissatisfied",
         description: "Dissatisfied type",
       }),
@@ -139,7 +140,7 @@ export const ReactionField: React.FC<ReactionFieldProps> = props => {
           ))
         ) : (
           <MenuItem disabled={true}>
-            <FormattedMessage defaultMessage="No results found" />
+            <FormattedMessage defaultMessage="No results found" id="hX5PAb" />
           </MenuItem>
         )}
       </RadioGroup>
