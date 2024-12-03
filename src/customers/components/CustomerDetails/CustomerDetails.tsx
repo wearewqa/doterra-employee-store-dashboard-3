@@ -3,9 +3,6 @@ import { DashboardCard } from "@dashboard/components/Card";
 import { ControlledCheckbox } from "@dashboard/components/ControlledCheckbox";
 import { AccountErrorFragment, CustomerDetailsQuery } from "@dashboard/graphql";
 import { maybe } from "@dashboard/misc";
-import { getFormErrors } from "@dashboard/utils/errors";
-import getAccountErrorMessage from "@dashboard/utils/errors/account";
-import { TextField } from "@material-ui/core";
 import { makeStyles } from "@saleor/macaw-ui";
 import { Skeleton, Text } from "@saleor/macaw-ui-next";
 import moment from "moment-timezone";
@@ -42,12 +39,10 @@ export interface CustomerDetailsProps {
 }
 
 const CustomerDetails: React.FC<CustomerDetailsProps> = props => {
-  const { customer, data, disabled, errors, onChange } = props;
+  const { customer, data, disabled, onChange } = props;
 
   const classes = useStyles(props);
   const intl = useIntl();
-
-  const formErrors = getFormErrors(["note"], errors);
 
   return (
     <DashboardCard>
@@ -89,22 +84,6 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = props => {
             description: "check to mark this account as active",
           })}
           name="isActive"
-          onChange={onChange}
-        />
-        <TextField
-          data-test-id="customer-note"
-          disabled={disabled}
-          error={!!formErrors.note}
-          fullWidth
-          multiline
-          helperText={getAccountErrorMessage(formErrors.note, intl)}
-          name="note"
-          label={intl.formatMessage({
-            id: "uUQ+Al",
-            defaultMessage: "Note",
-            description: "note about customer",
-          })}
-          value={data.note}
           onChange={onChange}
         />
       </DashboardCard.Content>
