@@ -47,6 +47,7 @@ import {
   filteredConditionalItems,
   hasAnyItemsReplaceable,
 } from "./utils";
+import OrderActions from "../OrderActions";
 
 export interface OrderDetailsPageProps {
   order: OrderDetailsFragment | OrderDetailsFragment;
@@ -289,6 +290,8 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = props => {
                 </>
               )}
               <OrderCustomerNote note={maybe(() => order.customerNote)} />
+              <CardSpacer />
+              <OrderActions order={order} />
             </DetailPageLayout.RightSidebar>
             <Savebar>
               <Savebar.Spacer />
