@@ -62,6 +62,9 @@ export const channelsList: ChannelDetailsFragment[] = [
       automaticallyCompleteFullyPaidCheckouts: true,
       __typename: "CheckoutSettings",
     },
+    shopStatus: "open",
+    shopStatusPageTitle: "Shop is open",
+    shopStatusPageDescription: "Example description",
   },
   {
     __typename: "Channel",
@@ -106,6 +109,9 @@ export const channelsList: ChannelDetailsFragment[] = [
       automaticallyCompleteFullyPaidCheckouts: true,
       __typename: "CheckoutSettings",
     },
+    shopStatus: "open",
+    shopStatusPageTitle: "Shop is open",
+    shopStatusPageDescription: "Example description",
   },
   {
     __typename: "Channel",
@@ -150,6 +156,9 @@ export const channelsList: ChannelDetailsFragment[] = [
       automaticallyCompleteFullyPaidCheckouts: true,
       __typename: "CheckoutSettings",
     },
+    shopStatus: "open",
+    shopStatusPageTitle: "Shop is open",
+    shopStatusPageDescription: "Example description",
   },
   {
     __typename: "Channel",
@@ -194,6 +203,9 @@ export const channelsList: ChannelDetailsFragment[] = [
       automaticallyCompleteFullyPaidCheckouts: true,
       __typename: "CheckoutSettings",
     },
+    shopStatus: "open",
+    shopStatusPageTitle: "Shop is open",
+    shopStatusPageDescription: "Example description",
   },
   {
     __typename: "Channel",
@@ -238,6 +250,9 @@ export const channelsList: ChannelDetailsFragment[] = [
       automaticallyCompleteFullyPaidCheckouts: true,
       __typename: "CheckoutSettings",
     },
+    shopStatus: "open",
+    shopStatusPageTitle: "Shop is open",
+    shopStatusPageDescription: "Example description",
   },
   {
     __typename: "Channel",
@@ -282,6 +297,9 @@ export const channelsList: ChannelDetailsFragment[] = [
       automaticallyCompleteFullyPaidCheckouts: true,
       __typename: "CheckoutSettings",
     },
+    shopStatus: "open",
+    shopStatusPageTitle: "Shop is open",
+    shopStatusPageDescription: "Example description",
   },
   {
     __typename: "Channel",
@@ -326,6 +344,9 @@ export const channelsList: ChannelDetailsFragment[] = [
       automaticallyCompleteFullyPaidCheckouts: true,
       __typename: "CheckoutSettings",
     },
+    shopStatus: "open",
+    shopStatusPageTitle: "Shop is open",
+    shopStatusPageDescription: "Example description",
   },
 ];
 
@@ -372,6 +393,9 @@ export const channel: ChannelDetailsFragment = {
     automaticallyCompleteFullyPaidCheckouts: true,
     __typename: "CheckoutSettings",
   },
+  shopStatus: "open",
+  shopStatusPageTitle: "Shop is open",
+  shopStatusPageDescription: "Example description",
 };
 
 type ProductChannelsWithPricing = NonNullable<ProductFragment["channelListings"]>[0] & {
