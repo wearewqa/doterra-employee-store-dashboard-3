@@ -659,6 +659,9 @@ export const ChannelDetailsFragmentDoc = gql`
   checkoutSettings {
     automaticallyCompleteFullyPaidCheckouts
   }
+  shopStatus: metafield(key: "shopStatus")
+  shopStatusPageTitle: metafield(key: "shopStatusPageTitle")
+  shopStatusPageDescription: metafield(key: "shopStatusPageDescription")
 }
     ${ChannelFragmentDoc}
 ${WarehouseFragmentDoc}`;
@@ -5067,13 +5070,25 @@ export type ChannelCreateMutationHookResult = ReturnType<typeof useChannelCreate
 export type ChannelCreateMutationResult = Apollo.MutationResult<Types.ChannelCreateMutation>;
 export type ChannelCreateMutationOptions = Apollo.BaseMutationOptions<Types.ChannelCreateMutation, Types.ChannelCreateMutationVariables>;
 export const ChannelUpdateDocument = gql`
-    mutation ChannelUpdate($id: ID!, $input: ChannelUpdateInput!) {
+    mutation ChannelUpdate($id: ID!, $input: ChannelUpdateInput!, $shopStatus: String!, $shopStatusPageTitle: String!, $shopStatusPageDescription: String!) {
   channelUpdate(id: $id, input: $input) {
     channel {
       ...ChannelDetails
     }
     errors {
       ...ChannelError
+    }
+  }
+  updateMetadata(
+    id: $id
+    input: [{key: "shopStatus", value: $shopStatus}, {key: "shopStatusPageTitle", value: $shopStatusPageTitle}, {key: "shopStatusPageDescription", value: $shopStatusPageDescription}]
+  ) {
+    item {
+      ... on Channel {
+        shopStatus: metafield(key: "shopStatus")
+        shopStatusPageTitle: metafield(key: "shopStatusPageTitle")
+        shopStatusPageDescription: metafield(key: "shopStatusPageDescription")
+      }
     }
   }
 }
@@ -5096,6 +5111,9 @@ export type ChannelUpdateMutationFn = Apollo.MutationFunction<Types.ChannelUpdat
  *   variables: {
  *      id: // value for 'id'
  *      input: // value for 'input'
+ *      shopStatus: // value for 'shopStatus'
+ *      shopStatusPageTitle: // value for 'shopStatusPageTitle'
+ *      shopStatusPageDescription: // value for 'shopStatusPageDescription'
  *   },
  * });
  */

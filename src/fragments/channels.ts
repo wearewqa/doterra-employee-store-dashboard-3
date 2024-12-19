@@ -43,5 +43,8 @@ export const channelDetailsFragment = gql`
     checkoutSettings {
       automaticallyCompleteFullyPaidCheckouts
     }
+    shopStatus: metafield(key: "shopStatus")
+    shopStatusPageTitle: metafield(key: "shopStatusPageTitle")
+    shopStatusPageDescription: metafield(key: "shopStatusPageDescription")
   }
 `;
