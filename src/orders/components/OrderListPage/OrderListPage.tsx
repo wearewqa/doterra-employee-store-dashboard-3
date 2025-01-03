@@ -28,7 +28,7 @@ import {
   TabPageProps,
 } from "@dashboard/types";
 import { hasLimits, isLimitReached } from "@dashboard/utils/limits";
-import { Box, Button, ChevronRightIcon, ExportIcon, Tooltip } from "@saleor/macaw-ui-next";
+import { Box, Button, ChevronRightIcon, OrdersIcon, Tooltip } from "@saleor/macaw-ui-next";
 import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -226,7 +226,7 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
               {selectedOrderIds.length > 0 && (
                 <Button
                   onClick={onOrdersFulfill}
-                  icon={<ExportIcon />}
+                  icon={<OrdersIcon />}
                   variant="secondary"
                   data-test-id="bulk-delete-button"
                 >
