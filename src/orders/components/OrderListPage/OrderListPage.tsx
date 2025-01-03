@@ -43,11 +43,13 @@ export interface OrderListPageProps
   limits: RefreshLimitsQuery["shop"]["limits"];
   orders: RelayToFlat<OrderListQuery["orders"]>;
   hasPresetsChanged: boolean;
+  selectedOrderIds: string[];
   onSettingsOpen: () => void;
   onAdd: () => void;
   params: OrderListUrlQueryParams;
   onTabUpdate: (tabName: string) => void;
   onTabDelete: (tabIndex: number) => void;
+  onSelectOrderIds: (rows: number[], clearSelection: () => void) => void;
 }
 
 const OrderListPage: React.FC<OrderListPageProps> = ({
@@ -65,6 +67,7 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
   onAll,
   currentTab,
   hasPresetsChanged,
+  selectedOrderIds,
   ...listProps
 }) => {
   const intl = useIntl();
@@ -216,6 +219,15 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
             id: "wTHjt3",
             defaultMessage: "Search Orders...",
           })}
+          actions={
+            <Box display="flex" gap={4}>
+              {selectedOrderIds.length > 0 && (
+                <Button>
+                  <FormattedMessage defaultMessage="Delete customers" id="kFsTMN" />
+                </Button>
+              )}
+            </Box>
+          }
         />
         <OrderListDatagrid {...listProps} hasRowHover={!isFilterPresetOpen} rowAnchor={orderUrl} />
       </DashboardCard>
