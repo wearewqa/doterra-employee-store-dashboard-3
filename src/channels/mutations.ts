@@ -14,13 +14,36 @@ export const channelCreateMutation = gql`
 `;
 
 export const channelUpdateMutation = gql`
-  mutation ChannelUpdate($id: ID!, $input: ChannelUpdateInput!) {
+  mutation ChannelUpdate(
+    $id: ID!
+    $input: ChannelUpdateInput!
+    $shopStatus: String!
+    $shopStatusPageTitle: String!
+    $shopStatusPageDescription: String!
+  ) {
     channelUpdate(id: $id, input: $input) {
       channel {
         ...ChannelDetails
       }
       errors {
         ...ChannelError
+      }
+    }
+
+    updateMetadata(
+      id: $id
+      input: [
+        { key: "shopStatus", value: $shopStatus }
+        { key: "shopStatusPageTitle", value: $shopStatusPageTitle }
+        { key: "shopStatusPageDescription", value: $shopStatusPageDescription }
+      ]
+    ) {
+      item {
+        ... on Channel {
+          shopStatus: metafield(key: "shopStatus")
+          shopStatusPageTitle: metafield(key: "shopStatusPageTitle")
+          shopStatusPageDescription: metafield(key: "shopStatusPageDescription")
+        }
       }
     }
   }

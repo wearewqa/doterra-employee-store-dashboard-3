@@ -1,5 +1,6 @@
 // @ts-strict-ignore
 import ChannelAllocationStrategy from "@dashboard/channels/components/ChannelAllocationStrategy";
+import { ChannelShopStatusForm } from "@dashboard/channels/components/ChannelShopStatusForm/ChannelShopStatusForm";
 import ShippingZones from "@dashboard/channels/components/ShippingZones";
 import Warehouses from "@dashboard/channels/components/Warehouses";
 import { channelsListUrl } from "@dashboard/channels/urls";
@@ -123,6 +124,9 @@ const ChannelDetailsPage = function <TErrors extends ChannelErrorFragment[]>({
     warehousesIdsToAdd: [],
     warehousesIdsToRemove: [],
     defaultCountry: (defaultCountry?.code || "") as CountryCode,
+    shopStatus: "open",
+    shopStatusPageTitle: "",
+    shopStatusPageDescription: "",
     ...formData,
     ...initialStockSettings,
     shippingZonesToDisplay: channelShippingZones,
@@ -255,6 +259,12 @@ const ChannelDetailsPage = function <TErrors extends ChannelErrorFragment[]>({
                 onTransactionFlowStrategyChange={handleTransactionFlowStrategyChange}
                 onAutomaticallyCompleteCheckoutsChange={handleAutomaticallyCompleteCheckoutsChange}
                 errors={allErrors}
+              />
+              <ChannelShopStatusForm
+                data={data}
+                disabled={disabled}
+                errors={allErrors}
+                onChange={change}
               />
             </DetailPageLayout.Content>
             <DetailPageLayout.RightSidebar>

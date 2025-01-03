@@ -26,6 +26,7 @@ interface OrderListDatagridProps extends ListProps, SortPage<OrderListUrlSortFie
   orders: RelayToFlat<OrderListQuery["orders"]>;
   onRowClick?: (id: string) => void;
   rowAnchor?: (id: string) => string;
+  onSelectOrderIds: (rowsIndex: number[], clearSelection: () => void) => void;
   hasRowHover?: boolean;
 }
 
@@ -39,6 +40,7 @@ export const OrderListDatagrid: React.FC<OrderListDatagridProps> = ({
   onRowClick,
   hasRowHover,
   rowAnchor,
+  onSelectOrderIds,
 }) => {
   const location = useLocation();
   const intl = useIntl();
@@ -105,8 +107,8 @@ export const OrderListDatagrid: React.FC<OrderListDatagridProps> = ({
       <DatagridChangeStateContext.Provider value={datagrid}>
         <Datagrid
           readonly
-          rowMarkers="none"
           loading={disabled}
+          rowMarkers="checkbox-visible"
           columnSelect="single"
           hasRowHover={hasRowHover}
           freezeColumns={2}
@@ -121,6 +123,7 @@ export const OrderListDatagrid: React.FC<OrderListDatagridProps> = ({
           selectionActions={() => null}
           onColumnResize={handlers.onResize}
           onColumnMoved={handlers.onMove}
+          onRowSelectionChange={onSelectOrderIds}
           renderColumnPicker={() => (
             <ColumnPicker
               staticColumns={staticColumns}

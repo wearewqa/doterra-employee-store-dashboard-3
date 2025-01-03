@@ -43,6 +43,9 @@ export interface FormData extends StockSettingsInput {
   allowUnpaidOrders: boolean;
   defaultTransactionFlowStrategy: TransactionFlowStrategyEnum;
   automaticallyCompleteCheckouts: boolean;
+  shopStatus: string;
+  shopStatusPageTitle: string;
+  shopStatusPageDescription: string;
 }
 
 export interface ChannelFormProps {

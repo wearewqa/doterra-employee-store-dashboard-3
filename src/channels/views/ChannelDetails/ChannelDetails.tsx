@@ -105,6 +105,9 @@ export const ChannelDetails: React.FC<ChannelDetailsProps> = ({ id, params }) =>
     warehousesIdsToRemove,
     warehousesToDisplay,
     automaticallyCompleteCheckouts,
+    shopStatus,
+    shopStatusPageTitle,
+    shopStatusPageDescription,
   }: FormData) => {
     const updateChannelMutation = updateChannel({
       variables: {
@@ -132,6 +135,9 @@ export const ChannelDetails: React.FC<ChannelDetailsProps> = ({ id, params }) =>
             allowUnpaidOrders,
           },
         },
+        shopStatus,
+        shopStatusPageTitle,
+        shopStatusPageDescription,
       },
     });
     const resultChannel = await updateChannelMutation;
