@@ -146,6 +146,9 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
   });
 
   const [orderBulkFulfill] = useOrderBulkFulfillMutation({
+    variables: {
+      ids: selectedRowIds,
+    },
     onCompleted: data => {
       if (data.orderBulkFulfill?.errors.length === 0) {
         notify({
@@ -243,6 +246,7 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
         open={params.action === "bulk-fulfill" && selectedRowIds.length > 0}
         onClose={closeModal}
         onConfirm={orderBulkFulfill}
+        numberOfOrders={selectedRowIds.length.toString()}
       />
     </PaginatorContext.Provider>
   );
