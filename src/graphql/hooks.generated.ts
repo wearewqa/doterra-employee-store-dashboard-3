@@ -10345,6 +10345,41 @@ export function useOrderDraftBulkCancelMutation(baseOptions?: ApolloReactHooks.M
 export type OrderDraftBulkCancelMutationHookResult = ReturnType<typeof useOrderDraftBulkCancelMutation>;
 export type OrderDraftBulkCancelMutationResult = Apollo.MutationResult<Types.OrderDraftBulkCancelMutation>;
 export type OrderDraftBulkCancelMutationOptions = Apollo.BaseMutationOptions<Types.OrderDraftBulkCancelMutation, Types.OrderDraftBulkCancelMutationVariables>;
+export const OrderBulkFulfillDocument = gql`
+    mutation OrderBulkFulfill($ids: [ID!]!) {
+  orderBulkFulfill(ids: $ids) {
+    errors {
+      ...OrderError
+    }
+  }
+}
+    ${OrderErrorFragmentDoc}`;
+export type OrderBulkFulfillMutationFn = Apollo.MutationFunction<Types.OrderBulkFulfillMutation, Types.OrderBulkFulfillMutationVariables>;
+
+/**
+ * __useOrderBulkFulfillMutation__
+ *
+ * To run a mutation, you first call `useOrderBulkFulfillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrderBulkFulfillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [orderBulkFulfillMutation, { data, loading, error }] = useOrderBulkFulfillMutation({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useOrderBulkFulfillMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.OrderBulkFulfillMutation, Types.OrderBulkFulfillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.OrderBulkFulfillMutation, Types.OrderBulkFulfillMutationVariables>(OrderBulkFulfillDocument, options);
+      }
+export type OrderBulkFulfillMutationHookResult = ReturnType<typeof useOrderBulkFulfillMutation>;
+export type OrderBulkFulfillMutationResult = Apollo.MutationResult<Types.OrderBulkFulfillMutation>;
+export type OrderBulkFulfillMutationOptions = Apollo.BaseMutationOptions<Types.OrderBulkFulfillMutation, Types.OrderBulkFulfillMutationVariables>;
 export const OrderConfirmDocument = gql`
     mutation OrderConfirm($id: ID!) {
   orderConfirm(id: $id) {

@@ -6,7 +6,11 @@ import { useConditionalFilterContext } from "@dashboard/components/ConditionalFi
 import DeleteFilterTabDialog from "@dashboard/components/DeleteFilterTabDialog";
 import SaveFilterTabDialog from "@dashboard/components/SaveFilterTabDialog";
 import { useShopLimitsQuery } from "@dashboard/components/Shop/queries";
-import { useOrderDraftCreateMutation, useOrderListQuery } from "@dashboard/graphql";
+import {
+  useOrderBulkFulfillMutation,
+  useOrderDraftCreateMutation,
+  useOrderListQuery,
+} from "@dashboard/graphql";
 import { useFilterHandlers } from "@dashboard/hooks/useFilterHandlers";
 import { useFilterPresets } from "@dashboard/hooks/useFilterPresets";
 import useListSettings from "@dashboard/hooks/useListSettings";
@@ -17,13 +21,17 @@ import usePaginator, {
   createPaginationState,
   PaginatorContext,
 } from "@dashboard/hooks/usePaginator";
+import { useRowSelection } from "@dashboard/hooks/useRowSelection";
+import { commonMessages } from "@dashboard/intl";
+import OrderBulkFulfillDialog from "@dashboard/orders/components/OrderBulkFulfillDialog";
 import { ListViews } from "@dashboard/types";
 import createDialogActionHandlers from "@dashboard/utils/handlers/dialogActionHandlers";
 import createSortHandler from "@dashboard/utils/handlers/sortHandler";
 import { mapEdgesToItems, mapNodeToChoice } from "@dashboard/utils/maps";
 import { getSortParams } from "@dashboard/utils/sort";
 import { useOnboarding } from "@dashboard/welcomePage/WelcomePageOnboarding/onboardingContext";
-import React, { useEffect } from "react";
+import isEqual from "lodash/isEqual";
+import React, { useCallback, useEffect } from "react";
 import { useIntl } from "react-intl";
 
 import OrderListPage from "../../components/OrderListPage/OrderListPage";
@@ -54,6 +62,12 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
   }, []);
 
   const {
+    clearRowSelection,
+    selectedRowIds,
+    setClearDatagridRowSelectionCallback,
+    setSelectedRowIds,
+  } = useRowSelection(params);
+  const {
     hasPresetsChanged,
     onPresetChange,
     onPresetDelete,
@@ -65,9 +79,9 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     setPresetIdToDelete,
   } = useFilterPresets({
     params,
+    reset: clearRowSelection,
     getUrl: orderListUrl,
     storageUtils,
-    reset: () => undefined,
   });
 
   usePaginationReset(orderListUrl, params, settings.rowNumber);
@@ -102,6 +116,7 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     defaultSortField: DEFAULT_SORT_KEY,
     hasSortWithRank: true,
     keepActiveTab: true,
+    cleanupFn: clearRowSelection,
   });
   const [openModal, closeModal] = createDialogActionHandlers<
     OrderListUrlDialog,
@@ -118,16 +133,54 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     }),
     [params, settings.rowNumber, valueProvider.value, paginationState],
   );
-  const { data } = useOrderListQuery({
+  const { data, refetch } = useOrderListQuery({
     displayLoader: true,
     variables: queryVariables,
   });
+
+  const orders = mapEdgesToItems(data?.orders);
   const paginationValues = usePaginator({
     pageInfo: data?.orders?.pageInfo,
     paginationState,
     queryString: params,
   });
+
+  const [orderBulkFulfill] = useOrderBulkFulfillMutation({
+    variables: {
+      ids: selectedRowIds,
+    },
+    onCompleted: data => {
+      if (data.orderBulkFulfill?.errors.length === 0) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+        refetch();
+        clearRowSelection();
+        closeModal();
+      }
+    },
+  });
+
   const handleSort = createSortHandler(navigate, orderListUrl, params);
+
+  const handleSetSelectedOrderIds = useCallback(
+    (rows: number[], clearSelection: () => void) => {
+      if (!orders) {
+        return;
+      }
+
+      const rowsIds = rows.map(row => orders[row].id);
+      const haveSaveValues = isEqual(rowsIds, selectedRowIds);
+
+      if (!haveSaveValues) {
+        setSelectedRowIds(rowsIds);
+      }
+
+      setClearDatagridRowSelectionCallback(clearSelection);
+    },
+    [orders, selectedRowIds, setClearDatagridRowSelectionCallback, setSelectedRowIds],
+  );
 
   return (
     <PaginatorContext.Provider value={paginationValues}>
@@ -155,6 +208,9 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
         onSettingsOpen={() => navigate(orderSettingsPath)}
         params={params}
         hasPresetsChanged={hasPresetsChanged()}
+        selectedOrderIds={selectedRowIds}
+        onSelectOrderIds={handleSetSelectedOrderIds}
+        onOrdersFulfill={() => openModal("bulk-fulfill", { ids: selectedRowIds })}
       />
       <SaveFilterTabDialog
         open={params.action === "save-search"}
@@ -185,6 +241,13 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
           }
         />
       )}
+      <OrderBulkFulfillDialog
+        confirmButtonState="default"
+        open={params.action === "bulk-fulfill" && selectedRowIds.length > 0}
+        onClose={closeModal}
+        onConfirm={orderBulkFulfill}
+        numberOfOrders={selectedRowIds.length.toString()}
+      />
     </PaginatorContext.Provider>
   );
 };

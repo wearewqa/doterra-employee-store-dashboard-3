@@ -104,6 +104,16 @@ export const orderDraftBulkCancelMutation = gql`
   }
 `;
 
+export const orderBulkFulfillMutation = gql`
+  mutation OrderBulkFulfill($ids: [ID!]!) {
+    orderBulkFulfill(ids: $ids) {
+      errors {
+        ...OrderError
+      }
+    }
+  }
+`;
+
 export const orderConfirmMutation = gql`
   mutation OrderConfirm($id: ID!) {
     orderConfirm(id: $id) {
