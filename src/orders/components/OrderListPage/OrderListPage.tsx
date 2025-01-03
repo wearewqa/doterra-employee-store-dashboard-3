@@ -28,7 +28,7 @@ import {
   TabPageProps,
 } from "@dashboard/types";
 import { hasLimits, isLimitReached } from "@dashboard/utils/limits";
-import { Box, Button, ChevronRightIcon, Tooltip } from "@saleor/macaw-ui-next";
+import { Box, Button, ChevronRightIcon, ExportIcon, Tooltip } from "@saleor/macaw-ui-next";
 import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -50,6 +50,7 @@ export interface OrderListPageProps
   onTabUpdate: (tabName: string) => void;
   onTabDelete: (tabIndex: number) => void;
   onSelectOrderIds: (rows: number[], clearSelection: () => void) => void;
+  onOrdersFulfill: () => void;
 }
 
 const OrderListPage: React.FC<OrderListPageProps> = ({
@@ -68,6 +69,7 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
   currentTab,
   hasPresetsChanged,
   selectedOrderIds,
+  onOrdersFulfill,
   ...listProps
 }) => {
   const intl = useIntl();
@@ -222,8 +224,13 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
           actions={
             <Box display="flex" gap={4}>
               {selectedOrderIds.length > 0 && (
-                <Button>
-                  <FormattedMessage defaultMessage="Delete customers" id="kFsTMN" />
+                <Button
+                  onClick={onOrdersFulfill}
+                  icon={<ExportIcon />}
+                  variant="secondary"
+                  data-test-id="bulk-delete-button"
+                >
+                  <FormattedMessage defaultMessage="Fulfill Orders" id="ikFFQb" />
                 </Button>
               )}
             </Box>

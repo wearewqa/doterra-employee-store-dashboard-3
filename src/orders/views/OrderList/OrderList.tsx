@@ -6,7 +6,11 @@ import { useConditionalFilterContext } from "@dashboard/components/ConditionalFi
 import DeleteFilterTabDialog from "@dashboard/components/DeleteFilterTabDialog";
 import SaveFilterTabDialog from "@dashboard/components/SaveFilterTabDialog";
 import { useShopLimitsQuery } from "@dashboard/components/Shop/queries";
-import { useOrderDraftCreateMutation, useOrderListQuery } from "@dashboard/graphql";
+import {
+  useOrderBulkFulfillMutation,
+  useOrderDraftCreateMutation,
+  useOrderListQuery,
+} from "@dashboard/graphql";
 import { useFilterHandlers } from "@dashboard/hooks/useFilterHandlers";
 import { useFilterPresets } from "@dashboard/hooks/useFilterPresets";
 import useListSettings from "@dashboard/hooks/useListSettings";
@@ -18,6 +22,8 @@ import usePaginator, {
   PaginatorContext,
 } from "@dashboard/hooks/usePaginator";
 import { useRowSelection } from "@dashboard/hooks/useRowSelection";
+import { commonMessages } from "@dashboard/intl";
+import OrderBulkFulfillDialog from "@dashboard/orders/components/OrderBulkFulfillDialog";
 import { ListViews } from "@dashboard/types";
 import createDialogActionHandlers from "@dashboard/utils/handlers/dialogActionHandlers";
 import createSortHandler from "@dashboard/utils/handlers/sortHandler";
@@ -127,10 +133,11 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     }),
     [params, settings.rowNumber, valueProvider.value, paginationState],
   );
-  const { data } = useOrderListQuery({
+  const { data, refetch } = useOrderListQuery({
     displayLoader: true,
     variables: queryVariables,
   });
+
   const orders = mapEdgesToItems(data?.orders);
   const paginationValues = usePaginator({
     pageInfo: data?.orders?.pageInfo,
@@ -138,19 +145,19 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     queryString: params,
   });
 
-  // const [bulkRemoveCustomers, bulkRemoveCustomersOpts] = useBulkOrder({
-  //   onCompleted: data => {
-  //     if (data.customerBulkDelete?.errors.length === 0) {
-  //       notify({
-  //         status: "success",
-  //         text: intl.formatMessage(commonMessages.savedChanges),
-  //       });
-  //       refetch();
-  //       clearRowSelection();
-  //       closeModal();
-  //     }
-  //   },
-  // });
+  const [orderBulkFulfill] = useOrderBulkFulfillMutation({
+    onCompleted: data => {
+      if (data.orderBulkFulfill?.errors.length === 0) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+        refetch();
+        clearRowSelection();
+        closeModal();
+      }
+    },
+  });
 
   const handleSort = createSortHandler(navigate, orderListUrl, params);
 
@@ -200,6 +207,7 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
         hasPresetsChanged={hasPresetsChanged()}
         selectedOrderIds={selectedRowIds}
         onSelectOrderIds={handleSetSelectedOrderIds}
+        onOrdersFulfill={() => openModal("bulk-fulfill", { ids: selectedRowIds })}
       />
       <SaveFilterTabDialog
         open={params.action === "save-search"}
@@ -230,6 +238,12 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
           }
         />
       )}
+      <OrderBulkFulfillDialog
+        confirmButtonState="default"
+        open={params.action === "bulk-fulfill" && selectedRowIds.length > 0}
+        onClose={closeModal}
+        onConfirm={orderBulkFulfill}
+      />
     </PaginatorContext.Provider>
   );
 };
