@@ -1,86 +1,98 @@
-// import { Card, CardActions, CardContent, Typography } from "@material-ui/core";
-// import CircularProgress from "@material-ui/core/CircularProgress";
-// import CardTitle from "@saleor/components/CardTitle";
-// import Container from "@saleor/components/Container";
-// import Hr from "@saleor/components/Hr";
-// import { orderFulfillMutation } from "@saleor/orders/mutations";
-// import { OrderFulfillUrlQueryParams } from "@saleor/unauthenticatedIneractions/urls";
-// import React, { useEffect } from "react";
-// import { useMutation } from "react-apollo";
-// import {
-//   OrderFulfill as OrderFulfillMutation,
-//   OrderFulfillVariables,
-// } from "../../../orders/types/OrderFulfill";
+import { useOrderBulkFulfillMutation } from "@dashboard/graphql";
+import useNotifier from "@dashboard/hooks/useNotifier";
+import { commonMessages } from "@dashboard/intl";
+import React, { memo, useEffect, useState } from "react";
+import { useIntl } from "react-intl";
 
-// interface OrderFulfillProps {
-//   params: OrderFulfillUrlQueryParams;
-// }
+import { OrderFulfillUrlQueryParams } from "../../urls";
+import useNavigator from "@dashboard/hooks/useNavigator";
 
-// const OrderFulfill: React.FC<OrderFulfillProps> = ({ params }) => {
-//   // const [fulfillOrder, { data, loading, called, error }] = useMutation<
-//   //   OrderFulfillUnauthenticated,
-//   //   OrderFulfillUnauthenticatedVariables
-//   // >(orderFulfillUnauthenticated);
+interface OrderFulfillProps {
+  params: OrderFulfillUrlQueryParams;
+}
 
-//   const [fulfillOrder, { data, loading, called, error }] = useMutation<
-//     OrderFulfillMutation,
-//     OrderFulfillVariables
-//   >(orderFulfillMutation);
+const OrderFulfill: React.FC<OrderFulfillProps> = ({ params }) => {
+  const navigate = useNavigator();
+  const notify = useNotifier();
+  const intl = useIntl();
 
-//   useEffect(() => {
-//     fulfillOrder({
-//       variables: {
-//         id: params.orderId,
-//         // secretToken: params.secretToken,
-//       },
-//     });
-//   }, [fulfillOrder]);
+  const [orderBulkFulfill, { called, loading }] = useOrderBulkFulfillMutation({
+    disableErrorHandling: true,
+    onError: error => {
+      notify({
+        status: "error",
+        text: error.message,
+      });
+      navigate("?", { replace: true });
+    },
 
-//   const hasErrors = error || data?.orderFulfill.errors.length > 0;
+    onCompleted: data => {
+      if (data.orderBulkFulfill?.errors.length === 0) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+      }
 
-//   return (
-//     <>
-//       <Container>
-//         <div style={{ margin: "50px auto 0 auto", maxWidth: "500px" }}>
-//           <Card>
-//             <CardTitle title="Fulfill order" />
-//             <CardContent style={{ textAlign: "center" }}>
-//               {loading && (
-//                 <>
-//                   <CircularProgress size={46} />
-//                   <Typography variant="title">Fulfilling order...</Typography>
-//                 </>
-//               )}
+      navigate("?", { replace: true });
+    },
+  });
 
-//               {!loading && called && (
-//                 <>
-//                   {!hasErrors && (
-//                     <>
-//                       <span style={{ fontSize: "40px" }}>✅</span>
-//                       <Typography variant="title">
-//                         Order #{data.orderFulfill.order.number} fulfilled
-//                       </Typography>
-//                     </>
-//                   )}
-//                   {hasErrors && (
-//                     <>
-//                       <span style={{ fontSize: "40px" }}>❌</span>
-//                       <Typography variant="title">
-//                         There was an error fulfilling the order.
-//                       </Typography>
-//                     </>
-//                   )}
-//                 </>
-//               )}
-//             </CardContent>
-//             <Hr />
-//             <CardActions></CardActions>
-//           </Card>
-//         </div>
-//       </Container>
-//     </>
-//   );
-// };
+  useEffect(() => {
+    if (!loading && !called && params.orderId) {
+      orderBulkFulfill({
+        variables: {
+          ids: params.orderId,
+        },
+      });
+    }
+  }, [loading, called, orderBulkFulfill, params.orderId]);
 
-// OrderFulfill.displayName = "OrderFulfill";
-// export default OrderFulfill;
+  return (
+    <>
+      <h1>Order Fulfill</h1>
+      <button onClick={() => orderBulkFulfill()}>Fulfill</button>
+      {/* <Container>
+        <div style={{ margin: "50px auto 0 auto", maxWidth: "500px" }}>
+          <Card>
+            <CardTitle title="Fulfill order" />
+            <CardContent style={{ textAlign: "center" }}>
+              {loading && (
+                <>
+                  <CircularProgress size={46} />
+                  <Typography variant="title">Fulfilling order...</Typography>
+                </>
+              )}
+
+              {!loading && called && (
+                <>
+                  {!hasErrors && (
+                    <>
+                      <span style={{ fontSize: "40px" }}>✅</span>
+                      <Typography variant="title">
+                        Order #{data.orderFulfill.order.number} fulfilled
+                      </Typography>
+                    </>
+                  )}
+                  {hasErrors && (
+                    <>
+                      <span style={{ fontSize: "40px" }}>❌</span>
+                      <Typography variant="title">
+                        There was an error fulfilling the order.
+                      </Typography>
+                    </>
+                  )}
+                </>
+              )}
+            </CardContent>
+            <Hr />
+            <CardActions></CardActions>
+          </Card>
+        </div>
+      </Container> */}
+    </>
+  );
+};
+
+OrderFulfill.displayName = "OrderFulfill";
+export default OrderFulfill;

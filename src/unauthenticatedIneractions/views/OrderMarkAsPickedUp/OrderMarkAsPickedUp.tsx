@@ -1,16 +1,17 @@
-import { Card, CardActions, CardContent, Typography } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import CardTitle from "@saleor/components/CardTitle";
-import Container from "@saleor/components/Container";
-import Hr from "@saleor/components/Hr";
-import { orderUpdateProcessStatusMutation } from "@saleor/orders/mutations";
-import {
-  OrderUpdateProcessStatus,
-  OrderUpdateProcessStatusVariables,
-} from "@saleor/orders/types/OrderUpdateProcessStatus";
-import { OrderMarkAsPickedUpUrlQueryParams } from "@saleor/unauthenticatedIneractions/urls";
-import React, { useEffect } from "react";
-import { useMutation } from "react-apollo";
+// import { Card, CardActions, CardContent, Typography } from "@material-ui/core";
+// import CircularProgress from "@material-ui/core/CircularProgress";
+// import CardTitle from "@saleor/components/CardTitle";
+// import Container from "@saleor/components/Container";
+// import Hr from "@saleor/components/Hr";
+// import { orderUpdateProcessStatusMutation } from "@saleor/orders/mutations";
+// import {
+//   OrderUpdateProcessStatus,
+//   OrderUpdateProcessStatusVariables,
+// } from "@saleor/orders/types/OrderUpdateProcessStatus";
+import React from "react";
+import { OrderMarkAsPickedUpUrlQueryParams } from "../../urls";
+// import React, { useEffect } from "react";
+// import { useMutation } from "react-apollo";
 
 interface OrderMarkAsPickedUpProps {
   params: OrderMarkAsPickedUpUrlQueryParams;
@@ -23,27 +24,28 @@ const OrderMarkAsPickedUp: React.FC<OrderMarkAsPickedUpProps> = ({ params }) => 
   //     OrderUpdateProcessStatusUnauthenticatedVariables
   //   >(orderUpdateProcessStatusUnauthenticated);
 
-  const [updateOrderProcessStatus, { data, loading, called, error }] = useMutation<
-    OrderUpdateProcessStatus,
-    OrderUpdateProcessStatusVariables
-  >(orderUpdateProcessStatusMutation);
+  // const [updateOrderProcessStatus, { data, loading, called, error }] = useMutation<
+  //   OrderUpdateProcessStatus,
+  //   OrderUpdateProcessStatusVariables
+  // >(orderUpdateProcessStatusMutation);
 
-  useEffect(() => {
-    updateOrderProcessStatus({
-      variables: {
-        id: params.orderId,
-        // secretToken: params.secretToken,
-        isPrinted: true,
-        isPickedUp: true,
-      },
-    });
-  }, [updateOrderProcessStatus]);
+  // useEffect(() => {
+  //   updateOrderProcessStatus({
+  //     variables: {
+  //       id: params.orderId,
+  //       // secretToken: params.secretToken,
+  //       isPrinted: true,
+  //       isPickedUp: true,
+  //     },
+  //   });
+  // }, [updateOrderProcessStatus]);
 
-  const hasErrors = error || data?.orderUpdateProcessStatus.errors.length > 0;
+  // const hasErrors = error || data?.orderUpdateProcessStatus.errors.length > 0;
 
   return (
     <>
-      <Container>
+      <h1>Mark As Picket Up</h1>
+      {/* <Container>
         <div style={{ margin: "50px auto 0 auto", maxWidth: "500px" }}>
           <Card>
             <CardTitle title="Mark order as picked up" />
@@ -80,7 +82,7 @@ const OrderMarkAsPickedUp: React.FC<OrderMarkAsPickedUpProps> = ({ params }) => 
             <CardActions></CardActions>
           </Card>
         </div>
-      </Container>
+      </Container> */}
     </>
   );
 };

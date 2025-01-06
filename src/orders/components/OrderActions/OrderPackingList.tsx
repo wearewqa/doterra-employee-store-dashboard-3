@@ -150,13 +150,17 @@ const OrderPackingList: FunctionComponent<OrderPackingListProps> = ({ order }) =
       return "No name";
     }
 
-    const firstNameParts = order.user.firstName.split(" ");
-    const lastNameParts = order.user.lastName.split(" ");
+    const firstNameParts = order.user.firstName?.split(" ");
+    const lastNameParts = order.user.lastName?.split(" ");
 
     // The user import add firstname and surname into the firstname field, so
     // if the lastname field is empty use the last word of the firstname field.
-    if (lastNameParts.length && lastNameParts[lastNameParts.length - 1] !== "") {
+    if (lastNameParts && lastNameParts.length && lastNameParts[lastNameParts.length - 1] !== "") {
       return `${lastNameParts[lastNameParts.length - 1]}, ${firstNameParts[0]}`;
+    }
+
+    if (!firstNameParts || firstNameParts.length === 0) {
+      return "No name";
     }
 
     return `${firstNameParts[firstNameParts.length - 1]}, ${firstNameParts[0]}`;

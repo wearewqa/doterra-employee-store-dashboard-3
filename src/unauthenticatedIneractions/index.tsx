@@ -1,22 +1,25 @@
-import { parseQueryParams } from "@saleor/misc";
+import { parse as parseQs } from "qs";
 import React from "react";
 import { Route, RouteComponentProps, Switch } from "react-router-dom";
+
 import { NotFound } from "../NotFound";
 import { orderFulfillPath, orderMarkAsPickedUpPath } from "./urls";
 import OrderFulfillView from "./views/OrderFulfill";
 import OrderMarkAsPickedUpView from "./views/OrderMarkAsPickedUp";
 
 const UnauthenticatedInteractionsRouter: React.FC = () => {
-  const OrderFulfill: React.StatelessComponent<RouteComponentProps<any>> = ({
-    location,
-  }) => {
-    return <OrderFulfillView params={parseQueryParams(location)} />;
+  const OrderFulfill: React.StatelessComponent<RouteComponentProps<any>> = ({ location }) => {
+    const qs = parseQs(location.search.substr(1)) as any;
+
+    return <OrderFulfillView params={qs} />;
   };
 
-  const OrderMarkAsPickedUp: React.StatelessComponent<
-    RouteComponentProps<any>
-  > = ({ location }) => {
-    return <OrderMarkAsPickedUpView params={parseQueryParams(location)} />;
+  const OrderMarkAsPickedUp: React.StatelessComponent<RouteComponentProps<any>> = ({
+    location,
+  }) => {
+    const qs = parseQs(location.search.substr(1)) as any;
+
+    return <OrderMarkAsPickedUpView params={qs} />;
   };
 
   return (
@@ -30,6 +33,5 @@ const UnauthenticatedInteractionsRouter: React.FC = () => {
   );
 };
 
-UnauthenticatedInteractionsRouter.displayName =
-  "UnauthenticatedInteractionsRouter";
+UnauthenticatedInteractionsRouter.displayName = "UnauthenticatedInteractionsRouter";
 export default UnauthenticatedInteractionsRouter;

@@ -76,6 +76,8 @@ import StaffSection from "./staff";
 import TaxesSection from "./taxes";
 import { paletteOverrides, themeOverrides } from "./themeOverrides";
 import TranslationsSection from "./translations";
+import UnauthenticatedInteractions from "./unauthenticatedIneractions";
+import { unauthenticatedInteractionsUrl } from "./unauthenticatedIneractions/urls";
 import WarehouseSection from "./warehouses";
 import { warehouseSection } from "./warehouses/urls";
 import { WelcomePage } from "./welcomePage";
@@ -300,6 +302,9 @@ const Routes: React.FC = () => {
                   component={ConfigurationSection}
                 />
                 <SectionRoute path={CustomAppSections.appsSection} component={CustomAppsSection} />
+                <Route path={unauthenticatedInteractionsUrl}>
+                  <UnauthenticatedInteractions />
+                </Route>
                 <Route component={NotFound} />
               </Switch>
             </ErrorBoundary>
