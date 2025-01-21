@@ -31,7 +31,7 @@ export default defineConfig(({ command, mode }) => {
   const isDev = command !== "build";
   const env = loadEnv(mode, process.cwd(), "");
   /*
-    Using explicit env variables, there is no need to expose all of them (security).
+    Using explicit env variables, there is no need to expose all of them (security)...
   */
   const {
     NODE_ENV,
@@ -108,17 +108,17 @@ export default defineConfig(({ command, mode }) => {
     copyNoopSW(),
   ];
 
-  if (!isDev) {
-    console.log("Enabling service worker...");
+  // if (!isDev) {
+  //   console.log("Enabling service worker...");
 
-    plugins.push(
-      sentryVitePlugin({
-        authToken: SENTRY_AUTH_TOKEN,
-        org: SENTRY_ORG,
-        project: SENTRY_PROJECT,
-      }),
-    );
-  }
+  //   plugins.push(
+  //     sentryVitePlugin({
+  //       authToken: SENTRY_AUTH_TOKEN,
+  //       org: SENTRY_ORG,
+  //       project: SENTRY_PROJECT,
+  //     }),
+  //   );
+  // }
 
   const globals = {
     /*
