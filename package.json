@@ -246,6 +246,7 @@
     ]
   },
   "scripts": {
+    "start:development": "vite",
     "dev": "vite --host",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
     "preview": "vite preview",
