@@ -1899,6 +1899,7 @@ export const OrderDetailsFragmentDoc = gql`
   number
   isPaid
   paymentStatus
+  pickupPerson: metafield(key: "pickupPerson")
   shippingAddress {
     ...Address
   }

@@ -1,4 +1,7 @@
-import { orderFulfillUrl } from "@dashboard/unauthenticatedIneractions/urls";
+import {
+  orderFulfillUrl,
+  orderMarkAsPickedUpUrl,
+} from "@dashboard/unauthenticatedIneractions/urls";
 import moment from "moment";
 import React, { FunctionComponent } from "react";
 import QRCode from "react-qr-code";
@@ -112,7 +115,7 @@ interface OrderPackingListProps {
     userEmail: string;
     number: string;
     shippingMethodName: string;
-    dedicatedPickupPerson: string;
+    pickupPerson: string;
   };
 }
 
@@ -121,11 +124,11 @@ const OrderPackingList: FunctionComponent<OrderPackingListProps> = ({ order }) =
     return null;
   }
 
-  // const orderLines = order.lines.sort(function (a, b) {
-  //   return a["productName"].toLowerCase() > b["productName"].toLowerCase() ? 1 : -1;
-  // });
+  const orderLines = [...order.lines].sort(function (a, b) {
+    return a["productName"].toLowerCase() > b["productName"].toLowerCase() ? 1 : -1;
+  });
 
-  const orderLines = order.lines;
+  // const orderLines = order.lines;
   const fulfillOrderUrl = urlJoin(
     document.location.origin,
     "/dashboard" +
@@ -136,14 +139,14 @@ const OrderPackingList: FunctionComponent<OrderPackingListProps> = ({ order }) =
       }),
   );
 
-  // const markOrderAsPickedUpUrl = absoluteUrl(
-  //   "/dashboard" +
-  //     orderMarkAsPickedUpUrl({
-  //       orderId: order.id,
-  //       secretToken: "disabled",
-  //       // secretToken: order.secretToken,
-  //     }),
-  // );
+  const markOrderAsPickedUpUrl = urlJoin(
+    "/dashboard" +
+      orderMarkAsPickedUpUrl({
+        orderId: order.id,
+        secretToken: "disabled",
+        // secretToken: order.secretToken,
+      }),
+  );
 
   const formattedName = () => {
     if (!order.user) {
@@ -184,8 +187,8 @@ const OrderPackingList: FunctionComponent<OrderPackingListProps> = ({ order }) =
 
             <div>
               <div style={metaSectionHeadingStyle}>
-                <strong>Dedicated Pickup person:</strong>
-                {order.dedicatedPickupPerson === "" ? "N/A" : order.dedicatedPickupPerson}
+                <strong>Dedicated Pickup person: </strong>
+                {order.pickupPerson === "" ? "N/A" : order.pickupPerson}
               </div>
             </div>
           </div>
@@ -200,7 +203,7 @@ const OrderPackingList: FunctionComponent<OrderPackingListProps> = ({ order }) =
               <div style={qrCodeWrapperStyles}>
                 <h4 style={qrCodeHeadingStyles}>Mark order as picked up</h4>
                 <div style={qrCodeStyles}>
-                  {/* <QRCode size={120} value={markOrderAsPickedUpUrl} /> */}
+                  <QRCode size={120} value={markOrderAsPickedUpUrl} />
                 </div>
               </div>
             </div>
