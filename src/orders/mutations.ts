@@ -114,6 +114,16 @@ export const orderBulkFulfillMutation = gql`
   }
 `;
 
+export const orderBulkMarkAsPickedUpMutation = gql`
+  mutation OrderBulkMarkAsPickedUp($ids: [ID!]!) {
+    orderBulkMarkedAsPickedUp(ids: $ids) {
+      errors {
+        ...OrderError
+      }
+    }
+  }
+`;
+
 export const orderConfirmMutation = gql`
   mutation OrderConfirm($id: ID!) {
     orderConfirm(id: $id) {

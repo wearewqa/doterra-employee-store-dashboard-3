@@ -8,6 +8,7 @@ import SaveFilterTabDialog from "@dashboard/components/SaveFilterTabDialog";
 import { useShopLimitsQuery } from "@dashboard/components/Shop/queries";
 import {
   useOrderBulkFulfillMutation,
+  useOrderBulkMarkAsPickedUpMutation,
   useOrderDraftCreateMutation,
   useOrderListQuery,
 } from "@dashboard/graphql";
@@ -24,6 +25,7 @@ import usePaginator, {
 import { useRowSelection } from "@dashboard/hooks/useRowSelection";
 import { commonMessages } from "@dashboard/intl";
 import OrderBulkFulfillDialog from "@dashboard/orders/components/OrderBulkFulfillDialog";
+import OrderBulkMarkAsPickedUpDialog from "@dashboard/orders/components/OrderBulkMarkedAsPickedUpDialog";
 import { ListViews } from "@dashboard/types";
 import createDialogActionHandlers from "@dashboard/utils/handlers/dialogActionHandlers";
 import createSortHandler from "@dashboard/utils/handlers/sortHandler";
@@ -162,6 +164,23 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     },
   });
 
+  const [orderBulkMarkAsPickedUp] = useOrderBulkMarkAsPickedUpMutation({
+    variables: {
+      ids: selectedRowIds,
+    },
+    onCompleted: data => {
+      if (data.orderBulkMarkedAsPickedUp?.errors.length === 0) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+        refetch();
+        clearRowSelection();
+        closeModal();
+      }
+    },
+  });
+
   const handleSort = createSortHandler(navigate, orderListUrl, params);
 
   const handleSetSelectedOrderIds = useCallback(
@@ -211,6 +230,7 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
         selectedOrderIds={selectedRowIds}
         onSelectOrderIds={handleSetSelectedOrderIds}
         onOrdersFulfill={() => openModal("bulk-fulfill", { ids: selectedRowIds })}
+        onOrdersMarkAsPickedUp={() => openModal("mark-as-picked-up", { ids: selectedRowIds })}
       />
       <SaveFilterTabDialog
         open={params.action === "save-search"}
@@ -246,6 +266,13 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
         open={params.action === "bulk-fulfill" && selectedRowIds.length > 0}
         onClose={closeModal}
         onConfirm={orderBulkFulfill}
+        numberOfOrders={selectedRowIds.length.toString()}
+      />
+      <OrderBulkMarkAsPickedUpDialog
+        confirmButtonState="default"
+        open={params.action === "mark-as-picked-up" && selectedRowIds.length > 0}
+        onClose={closeModal}
+        onConfirm={orderBulkMarkAsPickedUp}
         numberOfOrders={selectedRowIds.length.toString()}
       />
     </PaginatorContext.Provider>

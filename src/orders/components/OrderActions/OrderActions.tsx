@@ -1,5 +1,6 @@
 import { gql, useMutation } from "@apollo/client";
 import { DashboardCard } from "@dashboard/components/Card";
+import { OrderDetailsFragment } from "@dashboard/graphql";
 import useNotifier from "@dashboard/hooks/useNotifier";
 import { Button } from "@saleor/macaw-ui-next";
 import React from "react";
@@ -8,8 +9,8 @@ import { useIntl } from "react-intl";
 import OrderActionPrintPackingList from "./OrderActionPrintPackingList";
 
 const orderSendConfirmationEmail = gql`
-  mutation OrderSendConfirmationEmail($id: String!) {
-    sendOrderConfirmationEmail(id: $id) {
+  mutation OrderSendConfirmationEmail($id: ID!) {
+    orderSendConfirmationEmail(id: $id) {
       message
       success
     }
@@ -17,11 +18,11 @@ const orderSendConfirmationEmail = gql`
 `;
 
 interface OrderDetailsPageProps {
-  order: any;
+  order: OrderDetailsFragment;
 }
 
 interface ResendData {
-  sendOrderConfirmationEmail: {
+  orderSendConfirmationEmail: {
     success: boolean | null;
     message: string | null;
   };
@@ -42,7 +43,7 @@ const OrderActions: React.FC<OrderDetailsPageProps> = ({ order }) => {
   const handleResendOrderConfirmation = async () => {
     const result = await resendConfirmationEmail({ variables: { id: order.id } });
 
-    if (result.data?.sendOrderConfirmationEmail.success) {
+    if (result.data?.orderSendConfirmationEmail.success) {
       notify({
         status: "success",
         text: intl.formatMessage({
@@ -59,7 +60,7 @@ const OrderActions: React.FC<OrderDetailsPageProps> = ({ order }) => {
       // eslint-disable-next-line formatjs/enforce-id
       text: intl.formatMessage({
         id: "z3qGhz",
-        defaultMessage: result.data?.sendOrderConfirmationEmail.message,
+        defaultMessage: result.data?.orderSendConfirmationEmail.message,
       }),
     });
   };

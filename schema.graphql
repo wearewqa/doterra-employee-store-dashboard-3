@@ -12865,6 +12865,16 @@ type Mutation {
   ): OrderBulkFulfill
 
   """
+  Mark Orders as Picked Up. 
+  
+  Requires one of the following permissions: MANAGE_ORDERS.
+  """
+  orderBulkMarkedAsPickedUp(
+    """List of orders IDs to mark as picked up."""
+    ids: [ID!]!
+  ): OrderBulkMarkAsPickedUp
+
+  """
   Cancel an order. 
   
   Requires one of the following permissions: MANAGE_ORDERS.
@@ -13193,6 +13203,18 @@ type Mutation {
     """ID of the order to refund."""
     id: ID!
   ): OrderRefund
+
+  """Sends order confirmation email to the customer."""
+  orderSendConfirmationEmail(
+    """ID of the order to send a order confirmation email for."""
+    id: ID!
+  ): OrderSendOrderConfirmationEmail
+
+  """Sends reminder emails for any orders that have not been picked up."""
+  orderSendPickupReminderEmail(
+    """ID of the order to send a pickup reminder email for."""
+    order: ID!
+  ): OrderSendPickupReminderEmail
 
   """
   Update shop order settings across all channels. Returns `orderSettings` for the first `channel` in alphabetical order.  
@@ -16223,6 +16245,18 @@ type OrderBulkFulfill {
 }
 
 """
+Mark Orders as Picked Up. 
+
+Requires one of the following permissions: MANAGE_ORDERS.
+"""
+type OrderBulkMarkAsPickedUp {
+  """Returns how many objects were affected."""
+  count: Int!
+  errors: [OrderError!]!
+  orderErrors: [OrderError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+}
+
+"""
 Cancel an order. 
 
 Requires one of the following permissions: MANAGE_ORDERS.
@@ -17751,6 +17785,18 @@ input OrderReturnProductsInput {
 
   """If true, Saleor will call refund action for all lines."""
   refund: Boolean = false
+}
+
+"""Sends order confirmation email to the customer."""
+type OrderSendOrderConfirmationEmail {
+  message: String
+  success: Boolean
+}
+
+"""Sends reminder emails for any orders that have not been picked up."""
+type OrderSendPickupReminderEmail {
+  message: String
+  success: Boolean
 }
 
 """Represents the channel-specific order settings."""

@@ -9641,6 +9641,13 @@ export type OrderBulkFulfillMutationVariables = Exact<{
 
 export type OrderBulkFulfillMutation = { __typename: 'Mutation', orderBulkFulfill: { __typename: 'OrderBulkFulfill', errors: Array<{ __typename: 'OrderError', code: OrderErrorCode, field: string | null, addressType: AddressTypeEnum | null, message: string | null, orderLines: Array<string> | null }> } | null };
 
+export type OrderBulkMarkAsPickedUpMutationVariables = Exact<{
+  ids: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+
+export type OrderBulkMarkAsPickedUpMutation = { __typename: 'Mutation', orderBulkMarkedAsPickedUp: { __typename: 'OrderBulkMarkAsPickedUp', errors: Array<{ __typename: 'OrderError', code: OrderErrorCode, field: string | null, addressType: AddressTypeEnum | null, message: string | null, orderLines: Array<string> | null }> } | null };
+
 export type OrderConfirmMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
