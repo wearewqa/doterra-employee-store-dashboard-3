@@ -76,8 +76,8 @@ const OrderActions: React.FC<OrderDetailsPageProps> = ({ order }) => {
           })}
         </DashboardCard.Title>
       </DashboardCard.Header>
-      <DashboardCard.Content>
-        <Button onClick={handleResendOrderConfirmation}>
+      <DashboardCard.Content display="flex" flexDirection="column" gap={3}>
+        <Button onClick={handleResendOrderConfirmation} variant="secondary">
           {intl.formatMessage({
             id: "7vBjSP",
             defaultMessage: "Send order confirmation",

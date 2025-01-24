@@ -22,7 +22,7 @@ const OrderActionPrintPackingList: React.FC<OrderActionPrintPackingListProps> = 
           <OrderPackingList order={order} />
         </div>
       </div>
-      <Button onClick={handlePrintPackingList}>
+      <Button onClick={handlePrintPackingList} variant="secondary">
         {intl.formatMessage({
           id: "KoSYcG",
           defaultMessage: "Print Packing List",
