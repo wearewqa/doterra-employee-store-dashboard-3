@@ -35,7 +35,7 @@ const PageInfo: React.FC<PageInfoProps> = props => {
   const classes = useStyles(props);
   const intl = useIntl();
   const { defaultValue, editorRef, isReadyForMount, handleChange } = useRichTextContext();
-  const formErrors = getFormErrors(["title", "content"], errors);
+  const formErrors = getFormErrors(["title", "content", "slug"], errors);
 
   return (
     <DashboardCard className={classes.root}>
@@ -57,6 +57,21 @@ const PageInfo: React.FC<PageInfoProps> = props => {
           })}
           name={"title" as keyof PageData}
           value={data.title}
+          onChange={onChange}
+        />
+        <FormSpacer />
+        <TextField
+          disabled={disabled}
+          error={!!formErrors.slug}
+          fullWidth
+          helperText={getPageErrorMessage(formErrors.slug, intl)}
+          label={intl.formatMessage({
+            id: "pwLZPU",
+            defaultMessage: "Slug",
+            description: "page slug",
+          })}
+          name={"slug" as keyof PageData}
+          value={data.slug}
           onChange={onChange}
         />
         <FormSpacer />

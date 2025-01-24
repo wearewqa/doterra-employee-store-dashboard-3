@@ -274,6 +274,7 @@ export const fragmentOrderDetails = gql`
     number
     isPaid
     paymentStatus
+    pickupPerson: metafield(key: "pickupPerson")
     shippingAddress {
       ...Address
     }
@@ -368,6 +369,8 @@ export const fragmentOrderDetails = gql`
     user {
       id
       email
+      firstName
+      lastName
     }
     userEmail
     shippingMethods {
