@@ -10383,6 +10383,41 @@ export function useOrderBulkFulfillMutation(baseOptions?: ApolloReactHooks.Mutat
 export type OrderBulkFulfillMutationHookResult = ReturnType<typeof useOrderBulkFulfillMutation>;
 export type OrderBulkFulfillMutationResult = Apollo.MutationResult<Types.OrderBulkFulfillMutation>;
 export type OrderBulkFulfillMutationOptions = Apollo.BaseMutationOptions<Types.OrderBulkFulfillMutation, Types.OrderBulkFulfillMutationVariables>;
+export const OrderFulfillAllLinesDocument = gql`
+    mutation OrderFulfillAllLines($id: ID!) {
+  orderFulfillAllLines(id: $id) {
+    message
+    success
+    orderName
+  }
+}
+    `;
+export type OrderFulfillAllLinesMutationFn = Apollo.MutationFunction<Types.OrderFulfillAllLinesMutation, Types.OrderFulfillAllLinesMutationVariables>;
+
+/**
+ * __useOrderFulfillAllLinesMutation__
+ *
+ * To run a mutation, you first call `useOrderFulfillAllLinesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrderFulfillAllLinesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [orderFulfillAllLinesMutation, { data, loading, error }] = useOrderFulfillAllLinesMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrderFulfillAllLinesMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.OrderFulfillAllLinesMutation, Types.OrderFulfillAllLinesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.OrderFulfillAllLinesMutation, Types.OrderFulfillAllLinesMutationVariables>(OrderFulfillAllLinesDocument, options);
+      }
+export type OrderFulfillAllLinesMutationHookResult = ReturnType<typeof useOrderFulfillAllLinesMutation>;
+export type OrderFulfillAllLinesMutationResult = Apollo.MutationResult<Types.OrderFulfillAllLinesMutation>;
+export type OrderFulfillAllLinesMutationOptions = Apollo.BaseMutationOptions<Types.OrderFulfillAllLinesMutation, Types.OrderFulfillAllLinesMutationVariables>;
 export const OrderBulkMarkAsPickedUpDocument = gql`
     mutation OrderBulkMarkAsPickedUp($ids: [ID!]!) {
   orderBulkMarkedAsPickedUp(ids: $ids) {
@@ -10418,6 +10453,41 @@ export function useOrderBulkMarkAsPickedUpMutation(baseOptions?: ApolloReactHook
 export type OrderBulkMarkAsPickedUpMutationHookResult = ReturnType<typeof useOrderBulkMarkAsPickedUpMutation>;
 export type OrderBulkMarkAsPickedUpMutationResult = Apollo.MutationResult<Types.OrderBulkMarkAsPickedUpMutation>;
 export type OrderBulkMarkAsPickedUpMutationOptions = Apollo.BaseMutationOptions<Types.OrderBulkMarkAsPickedUpMutation, Types.OrderBulkMarkAsPickedUpMutationVariables>;
+export const OrderMarkAsPickedUpDocument = gql`
+    mutation OrderMarkAsPickedUp($id: ID!) {
+  orderMarkAsPickedUp(id: $id) {
+    message
+    success
+    orderName
+  }
+}
+    `;
+export type OrderMarkAsPickedUpMutationFn = Apollo.MutationFunction<Types.OrderMarkAsPickedUpMutation, Types.OrderMarkAsPickedUpMutationVariables>;
+
+/**
+ * __useOrderMarkAsPickedUpMutation__
+ *
+ * To run a mutation, you first call `useOrderMarkAsPickedUpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrderMarkAsPickedUpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [orderMarkAsPickedUpMutation, { data, loading, error }] = useOrderMarkAsPickedUpMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrderMarkAsPickedUpMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.OrderMarkAsPickedUpMutation, Types.OrderMarkAsPickedUpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.OrderMarkAsPickedUpMutation, Types.OrderMarkAsPickedUpMutationVariables>(OrderMarkAsPickedUpDocument, options);
+      }
+export type OrderMarkAsPickedUpMutationHookResult = ReturnType<typeof useOrderMarkAsPickedUpMutation>;
+export type OrderMarkAsPickedUpMutationResult = Apollo.MutationResult<Types.OrderMarkAsPickedUpMutation>;
+export type OrderMarkAsPickedUpMutationOptions = Apollo.BaseMutationOptions<Types.OrderMarkAsPickedUpMutation, Types.OrderMarkAsPickedUpMutationVariables>;
 export const OrderConfirmDocument = gql`
     mutation OrderConfirm($id: ID!) {
   orderConfirm(id: $id) {

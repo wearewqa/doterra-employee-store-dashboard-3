@@ -9641,12 +9641,26 @@ export type OrderBulkFulfillMutationVariables = Exact<{
 
 export type OrderBulkFulfillMutation = { __typename: 'Mutation', orderBulkFulfill: { __typename: 'OrderBulkFulfill', errors: Array<{ __typename: 'OrderError', code: OrderErrorCode, field: string | null, addressType: AddressTypeEnum | null, message: string | null, orderLines: Array<string> | null }> } | null };
 
+export type OrderFulfillAllLinesMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type OrderFulfillAllLinesMutation = { __typename: 'Mutation', orderFulfillAllLines: { __typename: 'OrderFulfillAllLines', message: string | null, success: boolean | null, orderName: string | null } | null };
+
 export type OrderBulkMarkAsPickedUpMutationVariables = Exact<{
   ids: Array<Scalars['ID']> | Scalars['ID'];
 }>;
 
 
 export type OrderBulkMarkAsPickedUpMutation = { __typename: 'Mutation', orderBulkMarkedAsPickedUp: { __typename: 'OrderBulkMarkAsPickedUp', errors: Array<{ __typename: 'OrderError', code: OrderErrorCode, field: string | null, addressType: AddressTypeEnum | null, message: string | null, orderLines: Array<string> | null }> } | null };
+
+export type OrderMarkAsPickedUpMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type OrderMarkAsPickedUpMutation = { __typename: 'Mutation', orderMarkAsPickedUp: { __typename: 'OrderMarkedAsPickedUp', message: string | null, success: boolean | null, orderName: string | null } | null };
 
 export type OrderConfirmMutationVariables = Exact<{
   id: Scalars['ID'];

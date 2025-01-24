@@ -12993,6 +12993,12 @@ type Mutation {
     order: ID
   ): OrderFulfill
 
+  """Fullfill all lines of an order."""
+  orderFulfillAllLines(
+    """ID of the order to fulfill."""
+    id: ID!
+  ): OrderFulfillAllLines
+
   """
   Approve existing fulfillment. 
   
@@ -13164,6 +13170,12 @@ type Mutation {
     """The external transaction reference."""
     transactionReference: String
   ): OrderMarkAsPaid
+
+  """Marks an Order as picked up."""
+  orderMarkAsPickedUp(
+    """ID of the order to mark as picked up."""
+    id: ID!
+  ): OrderMarkedAsPickedUp
 
   """
   Adds note to the order. 
@@ -16903,6 +16915,13 @@ type OrderFulfill {
   orderErrors: [OrderError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
 }
 
+"""Fullfill all lines of an order."""
+type OrderFulfillAllLines {
+  message: String
+  orderName: String
+  success: Boolean
+}
+
 input OrderFulfillInput {
   """If true, then allow proceed fulfillment when stock is exceeded."""
   allowStockToBeExceeded: Boolean = false
@@ -17551,6 +17570,13 @@ type OrderMarkAsPaid {
   """Order marked as paid."""
   order: Order
   orderErrors: [OrderError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+}
+
+"""Marks an Order as picked up."""
+type OrderMarkedAsPickedUp {
+  message: String
+  orderName: String
+  success: Boolean
 }
 
 """Event sent when order metadata is updated."""
