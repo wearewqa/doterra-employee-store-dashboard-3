@@ -76,6 +76,8 @@ import StaffSection from "./staff";
 import TaxesSection from "./taxes";
 import { paletteOverrides, themeOverrides } from "./themeOverrides";
 import TranslationsSection from "./translations";
+import UnauthenticatedInteractions from "./unauthenticatedIneractions";
+import { unauthenticatedInteractionsUrl } from "./unauthenticatedIneractions/urls";
 import WarehouseSection from "./warehouses";
 import { warehouseSection } from "./warehouses/urls";
 import { WelcomePage } from "./welcomePage";
@@ -156,6 +158,14 @@ const Routes: React.FC = () => {
   const homePageLoaded = channelLoaded && authenticated;
   const homePageLoading = (authenticated && !channelLoaded) || authenticating;
   const { isAppPath } = useLocationState();
+
+  const isUnauthenticatedInteractions = window.location.pathname.includes(
+    unauthenticatedInteractionsUrl,
+  );
+
+  if (isUnauthenticatedInteractions) {
+    return <UnauthenticatedInteractions />;
+  }
 
   return (
     <>

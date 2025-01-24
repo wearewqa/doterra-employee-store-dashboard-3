@@ -114,6 +114,36 @@ export const orderBulkFulfillMutation = gql`
   }
 `;
 
+export const orderFulfillAllLinesMutation = gql`
+  mutation OrderFulfillAllLines($id: ID!) {
+    orderFulfillAllLines(id: $id) {
+      message
+      success
+      orderName
+    }
+  }
+`;
+
+export const orderBulkMarkAsPickedUpMutation = gql`
+  mutation OrderBulkMarkAsPickedUp($ids: [ID!]!) {
+    orderBulkMarkedAsPickedUp(ids: $ids) {
+      errors {
+        ...OrderError
+      }
+    }
+  }
+`;
+
+export const orderMarkAsPickedUpMutation = gql`
+  mutation OrderMarkAsPickedUp($id: ID!) {
+    orderMarkAsPickedUp(id: $id) {
+      message
+      success
+      orderName
+    }
+  }
+`;
+
 export const orderConfirmMutation = gql`
   mutation OrderConfirm($id: ID!) {
     orderConfirm(id: $id) {

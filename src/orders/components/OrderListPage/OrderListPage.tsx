@@ -28,7 +28,14 @@ import {
   TabPageProps,
 } from "@dashboard/types";
 import { hasLimits, isLimitReached } from "@dashboard/utils/limits";
-import { Box, Button, ChevronRightIcon, OrdersIcon, Tooltip } from "@saleor/macaw-ui-next";
+import {
+  Box,
+  Button,
+  CheckboxIcon,
+  ChevronRightIcon,
+  OrdersIcon,
+  Tooltip,
+} from "@saleor/macaw-ui-next";
 import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -51,6 +58,7 @@ export interface OrderListPageProps
   onTabDelete: (tabIndex: number) => void;
   onSelectOrderIds: (rows: number[], clearSelection: () => void) => void;
   onOrdersFulfill: () => void;
+  onOrdersMarkAsPickedUp: () => void;
 }
 
 const OrderListPage: React.FC<OrderListPageProps> = ({
@@ -70,6 +78,7 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
   hasPresetsChanged,
   selectedOrderIds,
   onOrdersFulfill,
+  onOrdersMarkAsPickedUp,
   ...listProps
 }) => {
   const intl = useIntl();
@@ -224,14 +233,24 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
           actions={
             <Box display="flex" gap={4}>
               {selectedOrderIds.length > 0 && (
-                <Button
-                  onClick={onOrdersFulfill}
-                  icon={<OrdersIcon />}
-                  variant="secondary"
-                  data-test-id="bulk-delete-button"
-                >
-                  <FormattedMessage defaultMessage="Fulfill Orders" id="ikFFQb" />
-                </Button>
+                <>
+                  <Button
+                    onClick={onOrdersFulfill}
+                    icon={<OrdersIcon />}
+                    variant="secondary"
+                    data-test-id="bulk-fulfill-orders-button"
+                  >
+                    <FormattedMessage defaultMessage="Fulfill Orders" id="ikFFQb" />
+                  </Button>
+                  <Button
+                    onClick={onOrdersMarkAsPickedUp}
+                    icon={<CheckboxIcon />}
+                    variant="secondary"
+                    data-test-id="bulk-mark-as-picked-up-button"
+                  >
+                    <FormattedMessage defaultMessage="Mark as Picked Up" id="15tdHa" />
+                  </Button>
+                </>
               )}
             </Box>
           }
