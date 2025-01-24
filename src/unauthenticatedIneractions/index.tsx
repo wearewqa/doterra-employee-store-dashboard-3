@@ -1,8 +1,10 @@
+import { Route } from "@dashboard/components/Router";
 import { parse as parseQs } from "qs";
 import React from "react";
-import { Route, RouteComponentProps, Switch } from "react-router-dom";
+import { RouteComponentProps, Switch } from "react-router-dom";
 
 import { NotFound } from "../NotFound";
+import Layout from "./components/Layout";
 import { orderFulfillPath, orderMarkAsPickedUpPath } from "./urls";
 import OrderFulfillView from "./views/OrderFulfill";
 import OrderMarkAsPickedUpView from "./views/OrderMarkAsPickedUp";
@@ -23,13 +25,13 @@ const UnauthenticatedInteractionsRouter: React.FC = () => {
   };
 
   return (
-    <>
+    <Layout>
       <Switch>
         <Route path={orderFulfillPath} component={OrderFulfill} />
         <Route path={orderMarkAsPickedUpPath} component={OrderMarkAsPickedUp} />
         <Route component={NotFound} />
       </Switch>
-    </>
+    </Layout>
   );
 };
 

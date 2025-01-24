@@ -1,76 +1,92 @@
-// import { Card, CardActions, CardContent, Typography } from "@material-ui/core";
-// import CircularProgress from "@material-ui/core/CircularProgress";
-// import CardTitle from "@saleor/components/CardTitle";
-// import Container from "@saleor/components/Container";
-// import Hr from "@saleor/components/Hr";
-// import { orderUpdateProcessStatusMutation } from "@saleor/orders/mutations";
-// import {
-//   OrderUpdateProcessStatus,
-//   OrderUpdateProcessStatusVariables,
-// } from "@saleor/orders/types/OrderUpdateProcessStatus";
-import React from "react";
+import Hr from "@dashboard/components/Hr";
+import { useOrderMarkAsPickedUpMutation } from "@dashboard/graphql";
+import useNavigator from "@dashboard/hooks/useNavigator";
+import useNotifier from "@dashboard/hooks/useNotifier";
+import { commonMessages } from "@dashboard/intl";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@material-ui/core";
+import React, { useEffect } from "react";
+import { useIntl } from "react-intl";
+
 import { OrderMarkAsPickedUpUrlQueryParams } from "../../urls";
-// import React, { useEffect } from "react";
-// import { useMutation } from "react-apollo";
 
 interface OrderMarkAsPickedUpProps {
   params: OrderMarkAsPickedUpUrlQueryParams;
 }
 
 const OrderMarkAsPickedUp: React.FC<OrderMarkAsPickedUpProps> = ({ params }) => {
-  // const [updateOrderProcessStatus, { data, loading, called, error }] =
-  //   useMutation<
-  //     OrderUpdateProcessStatusUnauthenticated,
-  //     OrderUpdateProcessStatusUnauthenticatedVariables
-  //   >(orderUpdateProcessStatusUnauthenticated);
+  const navigate = useNavigator();
+  const notify = useNotifier();
+  const intl = useIntl();
 
-  // const [updateOrderProcessStatus, { data, loading, called, error }] = useMutation<
-  //   OrderUpdateProcessStatus,
-  //   OrderUpdateProcessStatusVariables
-  // >(orderUpdateProcessStatusMutation);
+  const [orderMarkAsPickedUp, { called, loading }] = useOrderMarkAsPickedUpMutation({
+    disableErrorHandling: true,
+    onError: error => {
+      notify({
+        status: "error",
+        text: error.message,
+      });
+      navigate("?result=error", { replace: true });
+    },
 
-  // useEffect(() => {
-  //   updateOrderProcessStatus({
-  //     variables: {
-  //       id: params.orderId,
-  //       // secretToken: params.secretToken,
-  //       isPrinted: true,
-  //       isPickedUp: true,
-  //     },
-  //   });
-  // }, [updateOrderProcessStatus]);
+    onCompleted: data => {
+      if (data.orderMarkAsPickedUp?.success) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+      }
 
-  // const hasErrors = error || data?.orderUpdateProcessStatus.errors.length > 0;
+      navigate(`?result=success&orderNumber=${data.orderMarkAsPickedUp.orderName}`, {
+        replace: true,
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (!loading && !called && params.orderId) {
+      orderMarkAsPickedUp({
+        variables: {
+          id: params.orderId,
+        },
+      });
+    }
+  }, [loading, called, orderMarkAsPickedUp, params.orderId]);
 
   return (
     <>
-      <h1>Mark As Picket Up</h1>
-      {/* <Container>
+      <Container>
         <div style={{ margin: "50px auto 0 auto", maxWidth: "500px" }}>
           <Card>
-            <CardTitle title="Mark order as picked up" />
             <CardContent style={{ textAlign: "center" }}>
               {loading && (
                 <>
                   <CircularProgress size={46} />
-                  <Typography variant="title">Marking order as picked up...</Typography>
+                  <Typography variant="h1">Marking order as picked up...</Typography>
                 </>
               )}
 
-              {!loading && called && (
+              {!loading && (
                 <>
-                  {!hasErrors && (
+                  {params.result === "success" && (
                     <>
                       <span style={{ fontSize: "40px" }}>✅</span>
-                      <Typography variant="title">
-                        Order #{data.orderUpdateProcessStatus.order.number} marked as picked up
+                      <Typography variant="h2">
+                        Order #{params.orderNumber} marked as picked up
                       </Typography>
+                      {/* <button onClick={() => orderBulkMarkedAsPickedUp()}>Mark As Picked Up</button> */}
                     </>
                   )}
-                  {hasErrors && (
+                  {params.result === "error" && (
                     <>
                       <span style={{ fontSize: "40px" }}>❌</span>
-                      <Typography variant="title">
+                      <Typography variant="h2">
                         There was an error marking the order as picked up.
                       </Typography>
                     </>
@@ -82,10 +98,10 @@ const OrderMarkAsPickedUp: React.FC<OrderMarkAsPickedUpProps> = ({ params }) => 
             <CardActions></CardActions>
           </Card>
         </div>
-      </Container> */}
+      </Container>
     </>
   );
 };
 
-OrderMarkAsPickedUp.displayName = "OrderMarkAsPickedUp";
+OrderMarkAsPickedUp.displayName = "OrderFulfill";
 export default OrderMarkAsPickedUp;

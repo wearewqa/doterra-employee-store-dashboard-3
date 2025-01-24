@@ -1,11 +1,20 @@
-import { useOrderBulkFulfillMutation } from "@dashboard/graphql";
+import Hr from "@dashboard/components/Hr";
+import { useOrderFulfillAllLinesMutation } from "@dashboard/graphql";
+import useNavigator from "@dashboard/hooks/useNavigator";
 import useNotifier from "@dashboard/hooks/useNotifier";
 import { commonMessages } from "@dashboard/intl";
-import React, { memo, useEffect, useState } from "react";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@material-ui/core";
+import React, { useEffect } from "react";
 import { useIntl } from "react-intl";
 
 import { OrderFulfillUrlQueryParams } from "../../urls";
-import useNavigator from "@dashboard/hooks/useNavigator";
 
 interface OrderFulfillProps {
   params: OrderFulfillUrlQueryParams;
@@ -16,70 +25,65 @@ const OrderFulfill: React.FC<OrderFulfillProps> = ({ params }) => {
   const notify = useNotifier();
   const intl = useIntl();
 
-  const [orderBulkFulfill, { called, loading }] = useOrderBulkFulfillMutation({
+  const [orderFulfillAllLines, { called, loading }] = useOrderFulfillAllLinesMutation({
     disableErrorHandling: true,
     onError: error => {
       notify({
         status: "error",
         text: error.message,
       });
-      navigate("?", { replace: true });
+      navigate("?result=error", { replace: true });
     },
 
     onCompleted: data => {
-      if (data.orderBulkFulfill?.errors.length === 0) {
+      if (data.orderFulfillAllLines?.success) {
         notify({
           status: "success",
           text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
 
-      navigate("?", { replace: true });
+      navigate(`?result=success&orderNumber=${data.orderFulfillAllLines.orderName}`, {
+        replace: true,
+      });
     },
   });
 
   useEffect(() => {
     if (!loading && !called && params.orderId) {
-      orderBulkFulfill({
+      orderFulfillAllLines({
         variables: {
-          ids: params.orderId,
+          id: params.orderId,
         },
       });
     }
-  }, [loading, called, orderBulkFulfill, params.orderId]);
+  }, [loading, called, orderFulfillAllLines, params.orderId]);
 
   return (
     <>
-      <h1>Order Fulfill</h1>
-      <button onClick={() => orderBulkFulfill()}>Fulfill</button>
-      {/* <Container>
+      <Container>
         <div style={{ margin: "50px auto 0 auto", maxWidth: "500px" }}>
           <Card>
-            <CardTitle title="Fulfill order" />
             <CardContent style={{ textAlign: "center" }}>
               {loading && (
                 <>
                   <CircularProgress size={46} />
-                  <Typography variant="title">Fulfilling order...</Typography>
+                  <Typography variant="h1">Fulfilling Order...</Typography>
                 </>
               )}
 
-              {!loading && called && (
+              {!loading && (
                 <>
-                  {!hasErrors && (
+                  {params.result === "success" && (
                     <>
                       <span style={{ fontSize: "40px" }}>✅</span>
-                      <Typography variant="title">
-                        Order #{data.orderFulfill.order.number} fulfilled
-                      </Typography>
+                      <Typography variant="h2">Order #{params.orderNumber} fulfilled</Typography>
                     </>
                   )}
-                  {hasErrors && (
+                  {params.result === "error" && (
                     <>
                       <span style={{ fontSize: "40px" }}>❌</span>
-                      <Typography variant="title">
-                        There was an error fulfilling the order.
-                      </Typography>
+                      <Typography variant="h2">There was an error fulfilling the order.</Typography>
                     </>
                   )}
                 </>
@@ -89,7 +93,7 @@ const OrderFulfill: React.FC<OrderFulfillProps> = ({ params }) => {
             <CardActions></CardActions>
           </Card>
         </div>
-      </Container> */}
+      </Container>
     </>
   );
 };

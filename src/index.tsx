@@ -159,6 +159,14 @@ const Routes: React.FC = () => {
   const homePageLoading = (authenticated && !channelLoaded) || authenticating;
   const { isAppPath } = useLocationState();
 
+  const isUnauthenticatedInteractions = window.location.pathname.includes(
+    unauthenticatedInteractionsUrl,
+  );
+
+  if (isUnauthenticatedInteractions) {
+    return <UnauthenticatedInteractions />;
+  }
+
   return (
     <>
       <WindowTitle title={intl.formatMessage(commonMessages.dashboard)} />
@@ -302,9 +310,6 @@ const Routes: React.FC = () => {
                   component={ConfigurationSection}
                 />
                 <SectionRoute path={CustomAppSections.appsSection} component={CustomAppsSection} />
-                <Route path={unauthenticatedInteractionsUrl}>
-                  <UnauthenticatedInteractions />
-                </Route>
                 <Route component={NotFound} />
               </Switch>
             </ErrorBoundary>
