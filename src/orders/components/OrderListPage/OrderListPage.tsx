@@ -33,6 +33,7 @@ import {
   Button,
   CheckboxIcon,
   ChevronRightIcon,
+  ExportIcon,
   OrdersIcon,
   Tooltip,
 } from "@saleor/macaw-ui-next";
@@ -59,6 +60,8 @@ export interface OrderListPageProps
   onSelectOrderIds: (rows: number[], clearSelection: () => void) => void;
   onOrdersFulfill: () => void;
   onOrdersMarkAsPickedUp: () => void;
+  onOrdersPrintPackingList: () => void;
+  onExportOrders: () => void;
 }
 
 const OrderListPage: React.FC<OrderListPageProps> = ({
@@ -79,6 +82,8 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
   selectedOrderIds,
   onOrdersFulfill,
   onOrdersMarkAsPickedUp,
+  onOrdersPrintPackingList,
+  onExportOrders,
   ...listProps
 }) => {
   const intl = useIntl();
@@ -155,6 +160,14 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
                       description: "button",
                     }),
                     onSelect: onSettingsOpen,
+                  },
+                  {
+                    label: intl.formatMessage({
+                      id: "SIq42l",
+                      defaultMessage: "Export Orders",
+                      description: "button",
+                    }),
+                    onSelect: onExportOrders,
                   },
                   ...extensionMenuItems,
                 ]}
@@ -249,6 +262,14 @@ const OrderListPage: React.FC<OrderListPageProps> = ({
                     data-test-id="bulk-mark-as-picked-up-button"
                   >
                     <FormattedMessage defaultMessage="Mark as Picked Up" id="15tdHa" />
+                  </Button>
+                  <Button
+                    onClick={onOrdersPrintPackingList}
+                    icon={<ExportIcon />}
+                    variant="secondary"
+                    data-test-id="bulk-print-packing-list-button"
+                  >
+                    <FormattedMessage defaultMessage="Print Packing List" id="M1Zm9d" />
                   </Button>
                 </>
               )}
