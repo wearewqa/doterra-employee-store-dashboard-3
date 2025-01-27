@@ -181,6 +181,49 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     },
   });
 
+  const handleOrderExport = async () => {
+    const token = localStorage.getItem("_saleorRefreshToken");
+
+    try {
+      const response = await fetch(`${process.env.API_URL}/export-orders/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to export orders");
+      }
+
+      // Create a blob for the CSV file
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Create a link element to download the file
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = "exported_orders.csv"; // Set the desired file name
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      notify({
+        status: "success",
+        text: "Orders exports successfully to you download folder.",
+      });
+    } catch (error) {
+      console.error("Error exporting orders:", error.message);
+      notify({
+        status: "error",
+        text: "Failed to export orders. Please try again.",
+      });
+    }
+  };
   const handleSort = createSortHandler(navigate, orderListUrl, params);
 
   const handleSetSelectedOrderIds = useCallback(
@@ -231,6 +274,8 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
         onSelectOrderIds={handleSetSelectedOrderIds}
         onOrdersFulfill={() => openModal("bulk-fulfill", { ids: selectedRowIds })}
         onOrdersMarkAsPickedUp={() => openModal("mark-as-picked-up", { ids: selectedRowIds })}
+        onOrdersPrintPackingList={() => openModal("print-packing-list", { ids: selectedRowIds })}
+        onExportOrders={handleOrderExport}
       />
       <SaveFilterTabDialog
         open={params.action === "save-search"}
