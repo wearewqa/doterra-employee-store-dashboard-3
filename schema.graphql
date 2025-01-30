@@ -12875,6 +12875,16 @@ type Mutation {
   ): OrderBulkMarkAsPickedUp
 
   """
+  Mark Orders as Printed. 
+  
+  Requires one of the following permissions: MANAGE_ORDERS.
+  """
+  orderBulkMarkedAsPrinted(
+    """List of orders IDs to mark as printed."""
+    ids: [ID!]!
+  ): OrderBulkMarkAsPrinted
+
+  """
   Cancel an order. 
   
   Requires one of the following permissions: MANAGE_ORDERS.
@@ -13176,6 +13186,12 @@ type Mutation {
     """ID of the order to mark as picked up."""
     id: ID!
   ): OrderMarkedAsPickedUp
+
+  """Marks an Order as printed."""
+  orderMarkAsPrinted(
+    """ID of the order to mark as printed up."""
+    id: ID!
+  ): OrderMarkedAsPrinted
 
   """
   Adds note to the order. 
@@ -16269,6 +16285,18 @@ type OrderBulkMarkAsPickedUp {
 }
 
 """
+Mark Orders as Printed. 
+
+Requires one of the following permissions: MANAGE_ORDERS.
+"""
+type OrderBulkMarkAsPrinted {
+  """Returns how many objects were affected."""
+  count: Int!
+  errors: [OrderError!]!
+  orderErrors: [OrderError!]! @deprecated(reason: "This field will be removed in Saleor 4.0. Use `errors` field instead.")
+}
+
+"""
 Cancel an order. 
 
 Requires one of the following permissions: MANAGE_ORDERS.
@@ -17574,6 +17602,13 @@ type OrderMarkAsPaid {
 
 """Marks an Order as picked up."""
 type OrderMarkedAsPickedUp {
+  message: String
+  orderName: String
+  success: Boolean
+}
+
+"""Marks an Order as printed."""
+type OrderMarkedAsPrinted {
   message: String
   orderName: String
   success: Boolean

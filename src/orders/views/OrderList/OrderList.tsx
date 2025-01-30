@@ -9,6 +9,7 @@ import { useShopLimitsQuery } from "@dashboard/components/Shop/queries";
 import {
   useOrderBulkFulfillMutation,
   useOrderBulkMarkAsPickedUpMutation,
+  useOrderBulkMarkAsPrintedMutation,
   useOrderDraftCreateMutation,
   useOrderListQuery,
 } from "@dashboard/graphql";
@@ -26,6 +27,7 @@ import { useRowSelection } from "@dashboard/hooks/useRowSelection";
 import { commonMessages } from "@dashboard/intl";
 import OrderBulkFulfillDialog from "@dashboard/orders/components/OrderBulkFulfillDialog";
 import OrderBulkMarkAsPickedUpDialog from "@dashboard/orders/components/OrderBulkMarkedAsPickedUpDialog";
+import OrderBulkPrintPackingListDialog from "@dashboard/orders/components/OrderBulkPrintPackingListDialog";
 import { ListViews } from "@dashboard/types";
 import createDialogActionHandlers from "@dashboard/utils/handlers/dialogActionHandlers";
 import createSortHandler from "@dashboard/utils/handlers/sortHandler";
@@ -181,6 +183,35 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
     },
   });
 
+  const [orderBulkMarkAsPrinted] = useOrderBulkMarkAsPrintedMutation({
+    variables: {
+      ids: selectedRowIds,
+    },
+    onCompleted: data => {
+      if (data.orderBulkMarkedAsPrinted?.errors.length === 0) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+        refetch();
+        clearRowSelection();
+        closeModal();
+      }
+    },
+  });
+
+  function getFormattedDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
+    return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+  }
+
   const handleOrderExport = async () => {
     const token = localStorage.getItem("_saleorRefreshToken");
 
@@ -204,7 +235,7 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
       const link = document.createElement("a");
 
       link.href = url;
-      link.download = "exported_orders.csv"; // Set the desired file name
+      link.download = `exported_orders_${getFormattedDate()}.csv`; // Set the desired file name
       document.body.appendChild(link);
       link.click();
 
@@ -319,6 +350,14 @@ export const OrderList: React.FC<OrderListProps> = ({ params }) => {
         onClose={closeModal}
         onConfirm={orderBulkMarkAsPickedUp}
         numberOfOrders={selectedRowIds.length.toString()}
+      />
+      <OrderBulkPrintPackingListDialog
+        confirmButtonState="default"
+        open={params.action === "print-packing-list" && selectedRowIds.length > 0}
+        onClose={closeModal}
+        onConfirm={orderBulkMarkAsPrinted}
+        numberOfOrders={selectedRowIds.length.toString()}
+        orderIds={selectedRowIds}
       />
     </PaginatorContext.Provider>
   );

@@ -6,8 +6,8 @@ export const unauthenticatedInteractionsUrl = "/unauthenticated-interactions";
 export const orderFulfillPath = urlJoin(unauthenticatedInteractionsUrl, "/order-fulfill/");
 export interface OrderFulfillUrlQueryParams {
   orderId: string;
-  orderNumber: string;
-  result: "success" | "error";
+  orderNumber?: string;
+  result?: "success" | "error";
   secretToken: string;
 }
 export const orderFulfillUrl = (params?: OrderFulfillUrlQueryParams) =>
@@ -19,8 +19,8 @@ export const orderMarkAsPickedUpPath = urlJoin(
 );
 export interface OrderMarkAsPickedUpUrlQueryParams {
   orderId: string;
-  orderNumber: string;
-  result: "success" | "error";
+  orderNumber?: string;
+  result?: "success" | "error";
   secretToken: string;
 }
 export const orderMarkAsPickedUpUrl = (params?: OrderMarkAsPickedUpUrlQueryParams) =>

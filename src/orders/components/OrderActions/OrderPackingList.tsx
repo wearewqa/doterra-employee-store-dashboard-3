@@ -97,7 +97,6 @@ const qrCodeStyles = {
 interface OrderPackingListProps {
   order: {
     id: string;
-    secretToken: string;
     lines: Array<{
       productName: string;
       productSku: string;

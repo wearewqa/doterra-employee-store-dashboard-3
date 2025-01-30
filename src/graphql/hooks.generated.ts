@@ -10488,6 +10488,76 @@ export function useOrderMarkAsPickedUpMutation(baseOptions?: ApolloReactHooks.Mu
 export type OrderMarkAsPickedUpMutationHookResult = ReturnType<typeof useOrderMarkAsPickedUpMutation>;
 export type OrderMarkAsPickedUpMutationResult = Apollo.MutationResult<Types.OrderMarkAsPickedUpMutation>;
 export type OrderMarkAsPickedUpMutationOptions = Apollo.BaseMutationOptions<Types.OrderMarkAsPickedUpMutation, Types.OrderMarkAsPickedUpMutationVariables>;
+export const OrderBulkMarkAsPrintedDocument = gql`
+    mutation OrderBulkMarkAsPrinted($ids: [ID!]!) {
+  orderBulkMarkedAsPrinted(ids: $ids) {
+    errors {
+      ...OrderError
+    }
+  }
+}
+    ${OrderErrorFragmentDoc}`;
+export type OrderBulkMarkAsPrintedMutationFn = Apollo.MutationFunction<Types.OrderBulkMarkAsPrintedMutation, Types.OrderBulkMarkAsPrintedMutationVariables>;
+
+/**
+ * __useOrderBulkMarkAsPrintedMutation__
+ *
+ * To run a mutation, you first call `useOrderBulkMarkAsPrintedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrderBulkMarkAsPrintedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [orderBulkMarkAsPrintedMutation, { data, loading, error }] = useOrderBulkMarkAsPrintedMutation({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useOrderBulkMarkAsPrintedMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.OrderBulkMarkAsPrintedMutation, Types.OrderBulkMarkAsPrintedMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.OrderBulkMarkAsPrintedMutation, Types.OrderBulkMarkAsPrintedMutationVariables>(OrderBulkMarkAsPrintedDocument, options);
+      }
+export type OrderBulkMarkAsPrintedMutationHookResult = ReturnType<typeof useOrderBulkMarkAsPrintedMutation>;
+export type OrderBulkMarkAsPrintedMutationResult = Apollo.MutationResult<Types.OrderBulkMarkAsPrintedMutation>;
+export type OrderBulkMarkAsPrintedMutationOptions = Apollo.BaseMutationOptions<Types.OrderBulkMarkAsPrintedMutation, Types.OrderBulkMarkAsPrintedMutationVariables>;
+export const OrderMarkAsPrintedDocument = gql`
+    mutation OrderMarkAsPrinted($id: ID!) {
+  orderMarkAsPrinted(id: $id) {
+    message
+    success
+    orderName
+  }
+}
+    `;
+export type OrderMarkAsPrintedMutationFn = Apollo.MutationFunction<Types.OrderMarkAsPrintedMutation, Types.OrderMarkAsPrintedMutationVariables>;
+
+/**
+ * __useOrderMarkAsPrintedMutation__
+ *
+ * To run a mutation, you first call `useOrderMarkAsPrintedMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useOrderMarkAsPrintedMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [orderMarkAsPrintedMutation, { data, loading, error }] = useOrderMarkAsPrintedMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useOrderMarkAsPrintedMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Types.OrderMarkAsPrintedMutation, Types.OrderMarkAsPrintedMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<Types.OrderMarkAsPrintedMutation, Types.OrderMarkAsPrintedMutationVariables>(OrderMarkAsPrintedDocument, options);
+      }
+export type OrderMarkAsPrintedMutationHookResult = ReturnType<typeof useOrderMarkAsPrintedMutation>;
+export type OrderMarkAsPrintedMutationResult = Apollo.MutationResult<Types.OrderMarkAsPrintedMutation>;
+export type OrderMarkAsPrintedMutationOptions = Apollo.BaseMutationOptions<Types.OrderMarkAsPrintedMutation, Types.OrderMarkAsPrintedMutationVariables>;
 export const OrderConfirmDocument = gql`
     mutation OrderConfirm($id: ID!) {
   orderConfirm(id: $id) {
@@ -12508,6 +12578,63 @@ export function useDevModeRunLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryH
 export type DevModeRunQueryHookResult = ReturnType<typeof useDevModeRunQuery>;
 export type DevModeRunLazyQueryHookResult = ReturnType<typeof useDevModeRunLazyQuery>;
 export type DevModeRunQueryResult = Apollo.QueryResult<Types.DevModeRunQuery, Types.DevModeRunQueryVariables>;
+export const OrderListWithLinesDocument = gql`
+    query OrderListWithLines($first: Int, $after: String, $last: Int, $before: String, $filter: OrderFilterInput, $sort: OrderSortingInput) {
+  orders(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    filter: $filter
+    sortBy: $sort
+  ) {
+    edges {
+      node {
+        ...OrderDetails
+      }
+    }
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+  }
+}
+    ${OrderDetailsFragmentDoc}`;
+
+/**
+ * __useOrderListWithLinesQuery__
+ *
+ * To run a query within a React component, call `useOrderListWithLinesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOrderListWithLinesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrderListWithLinesQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      last: // value for 'last'
+ *      before: // value for 'before'
+ *      filter: // value for 'filter'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useOrderListWithLinesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Types.OrderListWithLinesQuery, Types.OrderListWithLinesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<Types.OrderListWithLinesQuery, Types.OrderListWithLinesQueryVariables>(OrderListWithLinesDocument, options);
+      }
+export function useOrderListWithLinesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Types.OrderListWithLinesQuery, Types.OrderListWithLinesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<Types.OrderListWithLinesQuery, Types.OrderListWithLinesQueryVariables>(OrderListWithLinesDocument, options);
+        }
+export type OrderListWithLinesQueryHookResult = ReturnType<typeof useOrderListWithLinesQuery>;
+export type OrderListWithLinesLazyQueryHookResult = ReturnType<typeof useOrderListWithLinesLazyQuery>;
+export type OrderListWithLinesQueryResult = Apollo.QueryResult<Types.OrderListWithLinesQuery, Types.OrderListWithLinesQueryVariables>;
 export const PageTypeUpdateDocument = gql`
     mutation PageTypeUpdate($id: ID!, $input: PageTypeUpdateInput!) {
   pageTypeUpdate(id: $id, input: $input) {

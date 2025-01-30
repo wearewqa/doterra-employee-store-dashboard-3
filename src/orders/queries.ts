@@ -293,3 +293,35 @@ export const DevModeQuery = /* GraphQL */ `
     }
   }
 `;
+
+export const orderListWithLinesQuery = gql`
+  query OrderListWithLines(
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+    $filter: OrderFilterInput
+    $sort: OrderSortingInput
+  ) {
+    orders(
+      before: $before
+      after: $after
+      first: $first
+      last: $last
+      filter: $filter
+      sortBy: $sort
+    ) {
+      edges {
+        node {
+          ...OrderDetails
+        }
+      }
+      pageInfo {
+        hasPreviousPage
+        hasNextPage
+        startCursor
+        endCursor
+      }
+    }
+  }
+`;
