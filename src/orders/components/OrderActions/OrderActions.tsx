@@ -1,6 +1,10 @@
 import { gql, useMutation } from "@apollo/client";
 import { DashboardCard } from "@dashboard/components/Card";
-import { OrderDetailsFragment, useOrderMarkAsPrintedMutation } from "@dashboard/graphql";
+import {
+  OrderDetailsFragment,
+  useOrderMarkAsPickedUpMutation,
+  useOrderMarkAsPrintedMutation,
+} from "@dashboard/graphql";
 import useNotifier from "@dashboard/hooks/useNotifier";
 import { commonMessages } from "@dashboard/intl";
 import { Button, Skeleton } from "@saleor/macaw-ui-next";
@@ -87,6 +91,26 @@ const OrderActions: React.FC<OrderDetailsPageProps> = ({ order, loading }) => {
     });
   };
 
+  const [orderMarkAsPickedUp] = useOrderMarkAsPickedUpMutation({
+    onCompleted: data => {
+      if (data.orderMarkAsPickedUp?.success) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+        window.location.reload();
+      }
+    },
+  });
+
+  const handleMarkAsPickedUp = () => {
+    orderMarkAsPickedUp({
+      variables: {
+        id: order.id,
+      },
+    });
+  };
+
   return (
     <DashboardCard>
       <DashboardCard.Header>
@@ -121,6 +145,17 @@ const OrderActions: React.FC<OrderDetailsPageProps> = ({ order, loading }) => {
                 id: "s4phnq",
                 defaultMessage: "Mark Order As Printed",
                 description: "action option to mark the order as printed",
+              })}
+            </Button>
+            <Button
+              onClick={handleMarkAsPickedUp}
+              variant="secondary"
+              disabled={loading || order?.pickedUpAt?.length > 0}
+            >
+              {intl.formatMessage({
+                id: "Bw4qC+",
+                defaultMessage: "Mark Order As Picked Up",
+                description: "action option to mark the order as picked up",
               })}
             </Button>
           </>
