@@ -27,6 +27,8 @@ export const orderListQuery = gql`
           id
           number
           paymentStatus
+          pickedUpAt: metafield(key: "picked_up_at")
+          printedAt: metafield(key: "printed_at")
           status
           total {
             __typename

@@ -1,8 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
 import { DashboardCard } from "@dashboard/components/Card";
-import { OrderDetailsFragment } from "@dashboard/graphql";
+import { OrderDetailsFragment, useOrderMarkAsPrintedMutation } from "@dashboard/graphql";
 import useNotifier from "@dashboard/hooks/useNotifier";
-import { Button } from "@saleor/macaw-ui-next";
+import { commonMessages } from "@dashboard/intl";
+import { Button, Skeleton } from "@saleor/macaw-ui-next";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -19,6 +20,7 @@ const orderSendConfirmationEmail = gql`
 
 interface OrderDetailsPageProps {
   order: OrderDetailsFragment;
+  loading: boolean;
 }
 
 interface ResendData {
@@ -32,7 +34,7 @@ interface ResendVariables {
   id: string;
 }
 
-const OrderActions: React.FC<OrderDetailsPageProps> = ({ order }) => {
+const OrderActions: React.FC<OrderDetailsPageProps> = ({ order, loading }) => {
   const intl = useIntl();
   const notify = useNotifier();
 
@@ -65,6 +67,26 @@ const OrderActions: React.FC<OrderDetailsPageProps> = ({ order }) => {
     });
   };
 
+  const [orderMarkAsPrinted] = useOrderMarkAsPrintedMutation({
+    onCompleted: data => {
+      if (data.orderMarkAsPrinted?.success) {
+        notify({
+          status: "success",
+          text: intl.formatMessage(commonMessages.savedChanges),
+        });
+        window.location.reload();
+      }
+    },
+  });
+
+  const handleMarkAsPrinted = () => {
+    orderMarkAsPrinted({
+      variables: {
+        id: order.id,
+      },
+    });
+  };
+
   return (
     <DashboardCard>
       <DashboardCard.Header>
@@ -77,15 +99,32 @@ const OrderActions: React.FC<OrderDetailsPageProps> = ({ order }) => {
         </DashboardCard.Title>
       </DashboardCard.Header>
       <DashboardCard.Content display="flex" flexDirection="column" gap={3}>
-        <Button onClick={handleResendOrderConfirmation} variant="secondary">
-          {intl.formatMessage({
-            id: "7vBjSP",
-            defaultMessage: "Send order confirmation",
-            description: "action option to send the order confirmation email to the customer",
-          })}
-        </Button>
+        {loading ? (
+          <Skeleton />
+        ) : (
+          <>
+            <Button onClick={handleResendOrderConfirmation} variant="secondary">
+              {intl.formatMessage({
+                id: "7vBjSP",
+                defaultMessage: "Send order confirmation",
+                description: "action option to send the order confirmation email to the customer",
+              })}
+            </Button>
 
-        <OrderActionPrintPackingList order={order} />
+            <OrderActionPrintPackingList order={order} />
+            <Button
+              onClick={handleMarkAsPrinted}
+              variant="secondary"
+              disabled={loading || order?.printedAt?.length > 0}
+            >
+              {intl.formatMessage({
+                id: "s4phnq",
+                defaultMessage: "Mark Order As Printed",
+                description: "action option to mark the order as printed",
+              })}
+            </Button>
+          </>
+        )}
       </DashboardCard.Content>
     </DashboardCard>
   );

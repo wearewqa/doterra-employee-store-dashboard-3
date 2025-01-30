@@ -291,7 +291,7 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = props => {
               )}
               <OrderCustomerNote note={maybe(() => order.customerNote)} />
               <CardSpacer />
-              <OrderActions order={order} />
+              <OrderActions order={order} loading={loading} />
             </DetailPageLayout.RightSidebar>
             <Savebar>
               <Savebar.Spacer />

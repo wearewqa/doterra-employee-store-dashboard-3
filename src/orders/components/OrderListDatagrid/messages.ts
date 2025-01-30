@@ -40,6 +40,10 @@ export const columnsMessages = defineMessages({
     id: "NWxomz",
     defaultMessage: "Fulfillment status",
   },
+  orderStatus: {
+    id: "u0FYFo",
+    defaultMessage: "Order status",
+  },
   total: {
     id: "MJ2jZQ",
     defaultMessage: "Total",

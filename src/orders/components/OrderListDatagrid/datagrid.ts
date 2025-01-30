@@ -8,8 +8,14 @@ import {
 } from "@dashboard/components/Datagrid/customCells/cells";
 import { GetCellContentOpts } from "@dashboard/components/Datagrid/Datagrid";
 import { AvailableColumn } from "@dashboard/components/Datagrid/types";
-import { OrderListQuery } from "@dashboard/graphql";
-import { getStatusColor, transformOrderStatus, transformPaymentStatus } from "@dashboard/misc";
+import { OrderListQuery, OrderStatus } from "@dashboard/graphql";
+import {
+  getStatusColor,
+  PillStatusType,
+  transformOrderProcessStatus,
+  transformOrderStatus,
+  transformPaymentStatus,
+} from "@dashboard/misc";
 import { OrderListUrlSortField } from "@dashboard/orders/urls";
 import { RelayToFlat, Sort } from "@dashboard/types";
 import { getColumnSortDirectionIcon } from "@dashboard/utils/columns/getColumnSortDirectionIcon";
@@ -49,6 +55,11 @@ export const orderListStaticColumnAdapter = (
     {
       id: "status",
       title: intl.formatMessage(columnsMessages.status),
+      width: 200,
+    },
+    {
+      id: "orderStatus",
+      title: intl.formatMessage(columnsMessages.orderStatus),
       width: 200,
     },
     {
@@ -93,6 +104,8 @@ export const useGetCellContent = ({ columns, orders }: GetCellContentProps) => {
         return getPaymentCellContent(intl, theme, rowData);
       case "status":
         return getStatusCellContent(intl, theme, rowData);
+      case "orderStatus":
+        return getOrderStatusCellContent(intl, theme, rowData);
       case "total":
         return getTotalCellContent(rowData);
       default:
@@ -137,6 +150,52 @@ export function getStatusCellContent(
     });
 
     return pillCell(orderStatus.localized, color, COMMON_CELL_PROPS);
+  }
+
+  return readonlyTextCell("-");
+}
+
+export function getOrderStatusCellContent(
+  _intl: IntlShape,
+  currentTheme: DefaultTheme,
+  rowData: RelayToFlat<OrderListQuery["orders"]>[number],
+) {
+  let orderStatusText = "Not Printed";
+  let orderStatusColor: PillStatusType = "warning";
+
+  if (rowData.printedAt?.length) {
+    orderStatusText = "Printed";
+    orderStatusColor = "info";
+  }
+
+  if (rowData.status === OrderStatus.FULFILLED && !rowData.pickedUpAt) {
+    orderStatusText = "Not Picked Up";
+    orderStatusColor = "error";
+  }
+
+  if (rowData.pickedUpAt?.length) {
+    orderStatusText = "Picked Up";
+    orderStatusColor = "success";
+  }
+
+  const orderStatus = {
+    localized: orderStatusText,
+    status: orderStatusColor,
+  };
+
+  const { localized, status } = transformOrderProcessStatus(
+    rowData.pickedUpAt,
+    rowData.printedAt,
+    rowData.status,
+  );
+
+  if (orderStatus) {
+    const color = getStatusColor({
+      status: status,
+      currentTheme,
+    });
+
+    return pillCell(localized, color, COMMON_CELL_PROPS);
   }
 
   return readonlyTextCell("-");

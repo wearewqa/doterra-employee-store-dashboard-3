@@ -1,7 +1,7 @@
 import { DateTime } from "@dashboard/components/Date";
 import { Pill } from "@dashboard/components/Pill";
 import { OrderDetailsFragment } from "@dashboard/graphql";
-import { transformOrderStatus } from "@dashboard/misc";
+import { transformOrderProcessStatus, transformOrderStatus } from "@dashboard/misc";
 import { makeStyles } from "@saleor/macaw-ui";
 import { Box, Skeleton, Text } from "@saleor/macaw-ui-next";
 import React from "react";
@@ -19,7 +19,9 @@ const useStyles = makeStyles(
       gap: theme.spacing(2),
     },
     statusContainer: {
+      display: "flex",
       marginLeft: theme.spacing(2),
+      gap: theme.spacing(1),
     },
   }),
   { name: "OrderDetailsTitle" },
@@ -34,6 +36,8 @@ const Title: React.FC<TitleProps> = props => {
   }
 
   const { localized, status } = transformOrderStatus(order.status, intl);
+  const { localized: localizedOrderProcessStatus, status: statusOrderProcessStatus } =
+    transformOrderProcessStatus(order.pickedUpAt, order.printedAt, order.status);
 
   return (
     <div className={classes.container}>
@@ -44,6 +48,11 @@ const Title: React.FC<TitleProps> = props => {
         )}
         <div className={classes.statusContainer}>
           <Pill data-test-id="status-info" label={localized} color={status} />
+          <Pill
+            data-test-id="status-info"
+            label={localizedOrderProcessStatus}
+            color={statusOrderProcessStatus}
+          />
         </div>
       </Box>
 

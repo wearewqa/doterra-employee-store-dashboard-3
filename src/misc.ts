@@ -188,6 +188,31 @@ export const transformOrderStatus = (
   };
 };
 
+export const transformOrderProcessStatus = (pickedUpAt, printedAt, status) => {
+  let orderStatusText = "Not Printed";
+  let orderStatusColor: PillStatusType = "warning";
+
+  if (printedAt?.length) {
+    orderStatusText = "Printed";
+    orderStatusColor = "info";
+  }
+
+  if (status === OrderStatus.FULFILLED && !pickedUpAt) {
+    orderStatusText = "Not Picked Up";
+    orderStatusColor = "error";
+  }
+
+  if (pickedUpAt?.length) {
+    orderStatusText = "Picked Up";
+    orderStatusColor = "success";
+  }
+
+  return {
+    localized: orderStatusText,
+    status: orderStatusColor,
+  };
+};
+
 export const transformAddressToForm = (data?: AddressType) => ({
   city: data?.city || "",
   cityArea: data?.cityArea || "",
